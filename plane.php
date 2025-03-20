@@ -1,5 +1,6 @@
 <?php
 // Create a hashmap (associative array)
+$searchedPlane = 'fd'; 
 $planes = array(
     "A3001" => array(
         "image" => "boeing_747.jpg",
@@ -61,6 +62,8 @@ $planes = array(
         <div class="search-bar">
         
             <input type="text" placeholder="Search Planes" id="search-bar" >
+           
+            
    
         </div>
 
@@ -69,6 +72,7 @@ $planes = array(
                 <img src="../plane.png" alt="Plane Image">
                 <div>
                     <h1 id="headerName">as</h1>
+                    <h1> <?php echo $searchedPlane; ?></h1>
                     <p><strong>Condition</strong>: great  &nbsp &nbsp<strong>Fuel</strong>: High  &nbsp &nbsp<strong>Tire</strong>: Good  &nbsp &nbsp<strong>Engine</strong>: Good</p>
                 </div>
             </div>

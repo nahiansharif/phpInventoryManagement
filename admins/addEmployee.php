@@ -4,9 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>Admin Add Employee</title>
     <link rel="stylesheet" href="../style.css">
     <style>
+           
+        .refuseButton{
+            font-size: 40px;
+            font-weight: 500;
+            padding: 30px;
+            color: white; 
+            text-decoration: none; 
+            border-radius: 10px;
+            margin-left: 20px; 
+        }
+   
         
 
         .container {
@@ -65,74 +76,32 @@
             <p>
                 <strong> Plane Inspection Report Form </strong>
             </p>
+            <a href="employee.php" class="refuseButton">Back</a>
         </div>
 
 <div class="container">
     <form>
         <div class="plane-select">
-            <label for="plane">Select a plane for inspection:</label>
+            <label for="plane">Select Employee Type:</label>
             
             <select id="plane-list" name="plane-list">
-                <option value="plane1">Plane 1</option>
-                <option value="plane2">Plane 2</option>
-                <option value="plane3">Plane 3</option>
+                <option value="plane1">Manager</option>
+                <option value="plane2">Staff</option>
             </select>
         </div>
 
-        <label for="fuel">Fuel Level in Gallons:</label>
-        <input type="number" id="fuel" name="fuel" placeholder="Gallons">
+        <label for="fuel">First Name:</label>
+        <input type="number" id="fuel" name="fuel" placeholder="First Name">
 
-        <label for="tire1">tire 1 condition:</label>
-        <select id="tire1" name="tire1">
-            <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
-            <option value="bad">Bad</option>
-        </select>
 
-        <label for="tire2">tire 2 condition:</label>
-        <select id="tire2" name="tire2">
-            <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
-            <option value="bad">Bad</option>
-        </select>
+        <label for="fuel">Last Name:</label>
+        <input type="number" id="fuel" name="fuel" placeholder="Last Name">
 
-        <label for="tire3">tire 3 condition:</label>
-        <select id="tire3" name="tire3">
-            <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
-            <option value="bad">Bad</option>
-        </select>
+        <label for="fuel">Password:</label>
+        <input type="number" id="fuel" name="fuel" placeholder="Password">
 
-        <label for="tire4">tire 4 condition:</label>
-        <select id="tire4" name="tire4">
-            <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
-            <option value="bad">Bad</option>
-        </select>
-
-        <label for="tire5">tire 5 condition:</label>
-        <select id="tire5" name="tire5">
-            <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
-            <option value="bad">Bad</option>
-        </select>
-
-        <label for="tire6">tire 6 condition:</label>
-        <select id="tire6" name="tire6">
-            <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
-            <option value="bad">Bad</option>
-        </select>
-
-        <label for="engine">Engine Condition:</label>
-        <select id="engine" name="engine">
-            <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
-            <option value="bad">Bad</option>
-        </select>
-
-        <label for="comments">Comments:</label>
-        <textarea id="comments" name="comments" maxlength="397"></textarea>
+        <label for="fuel">Retype Password:</label>
+        <input type="number" id="fuel" name="fuel" placeholder="Retype Password">
 
         <input type="submit" value="Submit" class="approveButton">
     </form>

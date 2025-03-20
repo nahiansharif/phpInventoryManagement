@@ -90,10 +90,10 @@ $approvals = [
         <div class="container">
 
         <div class="menu">
-            <button class="approveButton">On Hold</button>
-            <button class="unselectedButton">Approved</button>
-            <button class="unselectedButton">Completed</button>
-            <button class="unselectedButton">Rejected</button>
+            <button class="approveButton" value="1" >On Hold</button>
+            <button class="unselectedButton" value="2">Approved</button>
+            <button class="unselectedButton" value="3">Completed</button>
+            <button class="unselectedButton" value="4">Rejected</button>
         </div>
 
 
@@ -145,8 +145,32 @@ $approvals = [
 
 
     </div>
-
+    
     <a href="../index.php" class="logout">Log Out</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        const buttons = document.querySelectorAll(".menu button");
+    
+        buttons.forEach(button => {
+            button.addEventListener("click", function() {
+                // Remove "approveButton" from all buttons
+                buttons.forEach(btn => {
+                btn.classList.remove("approveButton");
+                btn.classList.add("unselectedButton");
+                });
+        
+                // Add "approveButton" to the clicked button
+                this.classList.remove("unselectedButton");
+                this.classList.add("approveButton");
+
+
+                const buttonValue = button.value;
+                console.log(`Button "${button.textContent}" clicked. Value: ${buttonValue}`);
+            });
+        });
+    });
+    </script>
     
 </body>
 </html>

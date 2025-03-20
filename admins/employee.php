@@ -34,8 +34,18 @@ $employees = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>Admin Employee</title>
     <link rel="stylesheet" href="../style.css">
+    <style>
+        .approveButton{
+            font-size: 40px;
+            font-weight: 500;
+            padding: 15px;
+            color: white; 
+            text-decoration: none; 
+            border-radius: 10px;
+        }
+    </style>
 
 </head>
 <body>
@@ -52,8 +62,9 @@ $employees = [
             <p>
                 <strong>Managers: </strong> 23 &nbsp &nbsp 
                 <strong>Staff: </strong> 500 &nbsp &nbsp 
+                <a href="addEmployee.php" class="approveButton">Add</a>
             </p>
-            <button class="approveButton">Add</button>
+            
         </div>
 
         <br>
