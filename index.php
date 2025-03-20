@@ -1,3 +1,40 @@
+<?php
+
+$users = [
+    'admin1' => ['password' => 'adminpass', 'role' => 'admin'],
+    'admin2' => ['password' => 'adminpass2', 'role' => 'admin'],
+    'manager1' => ['password' => 'managePass', 'role' => 'manager'],
+    'manager2' => ['password' => 'managePass2', 'role' => 'manager'],
+    'staff1' => ['password' => 'staffpass', 'role' => 'staff'],
+    'staff2' => ['password' => 'staffpass2', 'role' => 'staff'],
+]; 
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    if( isset($users[$username]) && $users[$username]['password'] === $password){
+        $role = $users[$username]['role']; 
+
+        switch($role){
+            case 'admin':
+                header('Location:admins/admin.php'); 
+                exit; 
+            case 'manager':
+                header('Location:managers/manager.php'); 
+                exit; 
+            case 'staff':
+                header('Location:staff/staff.php'); 
+                exit; 
+        }
+    } else {
+        echo "invalid username or password"; 
+    }
+}
+
+
+?> 
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,20 +46,20 @@
 </head>
 <body class="d-flex justify-content-center align-items-center vh-100">
     <main class="form-signin text-center">
-        <form>
+        <form method="post" action = " <?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
             <img class="mb-4" src="logo.png" alt="" width="250" height="50">
             <h1 class="h3 mb-3 fw-normal title">Please sign in</h1>
 
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput" placeholder="">
+                <input type="text" class="form-control" id="username" name="username" placeholder="username">
                 <label for="floatingInput">User ID</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                 <label for="floatingPassword">Password</label>
             </div>
 
-            <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+            <button class="btn btn-primary w-100 py-2" type="submit" value="login">Sign in</button>
             <a href="admins/admin.php">admin</a>
             <a href="managers/manager.php">Manager</a>
             <a href="staff/staff.php">staff</a>
