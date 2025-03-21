@@ -1,0 +1,105 @@
+CREATE DATABASE Silvee;
+
+USE Silvee;
+
+CREATE TABLE users (
+    userID INT PRIMARY KEY AUTO_INCREMENT,
+    password VARCHAR(255) NOT NULL,
+    firstname VARCHAR(255) NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'manager', 'staff') NOT NULL,
+    status ENUM('available', 'busy') DEFAULT 'available'
+);
+
+
+CREATE TABLE Purchase (
+    purchaseID INT PRIMARY KEY AUTO_INCREMENT,
+    managerUserID INT,
+    plane INT,
+    fuel INT,
+    tire INT,
+    motor INT,
+    FOREIGN KEY (managerUserID) REFERENCES users(userID)
+);
+
+
+CREATE TABLE Plane (
+    NameID VARCHAR(255) PRIMARY KEY,
+    state ENUM('Good', 'Medicore', 'Bad'),  
+    fuel INT,
+    tire INT,
+    motor INT
+);
+
+CREATE TABLE StoreHouse (
+    plane INT,
+    fuel INT,
+    tire INT,
+    motor INT
+);
+
+CREATE TABLE Task (
+    TaskID INT PRIMARY KEY AUTO_INCREMENT,
+    TargetPlane VARCHAR(255),
+    Fuel INT,
+    tire1 ENUM('Good', 'Medicore', 'Bad'),
+    tire2 ENUM('Good', 'Medicore', 'Bad'),
+    tire3 ENUM('Good', 'Medicore', 'Bad'),
+    tire4 ENUM('Good', 'Medicore', 'Bad'),
+    tire5 ENUM('Good', 'Medicore', 'Bad'),
+    tire6 ENUM('Good', 'Medicore', 'Bad'),
+    motor ENUM('Good', 'Medicore', 'Bad'),
+    state ENUM('Good', 'Medicore', 'Bad'),
+    taskStatus ENUM('on hold', 'approved', 'Completed', 'rejected'),
+    staffUserID1 INT,
+    staffUserID2 INT,
+    staffUserID3 INT,
+    staffUserID4 INT,
+    staffUserID5 INT,
+    staffUserID6 INT,
+    staffUserID7 INT,
+    staffUserID8 INT
+);
+
+
+-- add users 
+
+
+USE Silvee;
+
+    -- Insert 2 admins
+INSERT INTO users (password, firstname, lastname, role) VALUES
+('P@sswOrd!23', 'Anya', 'Volkov', 'admin'),
+('SecureH@sh', 'Jax', 'Rider', 'admin');
+
+    -- Insert 5 managers
+INSERT INTO users (password, firstname, lastname, role) VALUES
+('Man@ger_42', 'Zara', 'Knight', 'manager'),
+('Str0ngP@ss', 'Finn', 'Sterling', 'manager'),
+('C0mpl3x!', 'Luna', 'Vance', 'manager'),
+('M@nag3R_77', 'Kai', 'Frost', 'manager'),
+('P@$$wOrd99', 'Nova', 'Reed', 'manager');
+
+    -- Insert 15 staff members
+INSERT INTO users (password, firstname, lastname, role) VALUES
+('St@ff_1', 'Rory', 'Shaw', 'staff'),
+('P@$$WOrd2', 'Sage', 'Ward', 'staff'),
+('Secur3_Pass', 'Leo', 'West', 'staff'),
+('PassWOrd_4', 'Ivy', 'Lane', 'staff'),
+('Str0ng_5', 'Milo', 'Bell', 'staff'),
+('C0mpl3x6', 'Hazel', 'Page', 'staff'),
+('P@ss7WOrd', 'Owen', 'Cole', 'staff'),
+('S3cur3P@ss', 'Willow', 'Hill', 'staff'),
+('P@$$wOrd9', 'Asher', 'King', 'staff'),
+('Str0ng10', 'Scarlett', 'Dale', 'staff'),
+('C0mpl3x11', 'Jasper', 'Rose', 'staff'),
+('P@$$WOrd12', 'Violet', 'Lake', 'staff'),
+('S3cur3P@ss13', 'Silas', 'River', 'staff'),
+('P@$$wOrd14', 'Coral', 'Stone', 'staff'),
+('Str0ng15', 'Zephyr', 'Meadow', 'staff');
+
+--Insert Storage
+
+INSERT INTO storehouse (plane, fuel, tire,motor)VALUES
+(15, 900000, 60, 35)
+    -- 1 plane = 70k fuel in gallons, 6 tires, 4 engines

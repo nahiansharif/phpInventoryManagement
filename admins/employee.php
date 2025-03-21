@@ -1,32 +1,7 @@
 <?php
 
-$employees = [
-    101 => [
-        'full_name' => 'John Doe',
-        'title' => 'Software Engineer',
-        'password' => 'password123', // Remember: never store passwords like this!
-    ],
-    102 => [
-        'full_name' => 'Jane Smith',
-        'title' => 'Project Manager',
-        'password' => 'securepass',
-    ],
-    103 => [
-        'full_name' => 'David Lee',
-        'title' => 'Data Analyst',
-        'password' => 'data456',
-    ],
-    104 => [
-        'full_name' => 'Emily Chen',
-        'title' => 'UX Designer',
-        'password' => 'design789',
-    ],
-    105 => [
-        'full_name' => 'Robert Garcia',
-        'title' => 'Sales Representative',
-        'password' => 'salespass',
-    ],
-];
+include("../database.php"); 
+
 ?> 
 
 <!DOCTYPE html>
