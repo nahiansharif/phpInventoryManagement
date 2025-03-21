@@ -131,6 +131,14 @@
             <option value="bad">Bad</option>
         </select>
 
+        <label for="engine">How many staff needed for maintainance?</label>
+        <select id="engine" name="engine">
+            <option value="2">2</option>
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="-1">New Plane Needed!</option>
+        </select>
+
         <label for="comments">Comments:</label>
         <textarea id="comments" name="comments" maxlength="397"></textarea>
 

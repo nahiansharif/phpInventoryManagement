@@ -63,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             <a href="admins/admin.php">admin</a>
             <a href="managers/manager.php">Manager</a>
             <a href="staff/staff.php">staff</a>
+            <a href="dummy.php">dummy</a>
             <p class="mt-5 mb-3 text-body-secondary title">&copy; 2025</p>
         </form>
     </main>
