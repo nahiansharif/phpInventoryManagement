@@ -1,32 +1,15 @@
 <?php
 
-$employees = [
-    101 => [
-        'full_name' => 'John Doe',
-        'title' => 'Software Engineer',
-        'password' => 'password123', // Remember: never store passwords like this!
-    ],
-    102 => [
-        'full_name' => 'Jane Smith',
-        'title' => 'Project Manager',
-        'password' => 'securepass',
-    ],
-    103 => [
-        'full_name' => 'David Lee',
-        'title' => 'Data Analyst',
-        'password' => 'data456',
-    ],
-    104 => [
-        'full_name' => 'Emily Chen',
-        'title' => 'UX Designer',
-        'password' => 'design789',
-    ],
-    105 => [
-        'full_name' => 'Robert Garcia',
-        'title' => 'Sales Representative',
-        'password' => 'salespass',
-    ],
-];
+include("../database.php"); 
+
+if (mysqli_num_rows($employees) > 0){
+    echo "its working";
+
+
+} else { 
+    echo "DB not working"; 
+}
+
 ?> 
 
 <!DOCTYPE html>
@@ -91,23 +74,23 @@ $employees = [
                     </div>
             </div>
 
+            
             <?php
-                foreach ($employees as $id => $details) {
-                    echo '<div class="card">';
-                    echo '<img src="../employee.png" alt="Plane Image" class="planePic">'; 
-                    echo '<div>';
-                    echo '<h1>' . $details["full_name"] . '</h1>';
-                    echo '<p>';
-                    echo '<strong>Title</strong>: ' .$details["title"].  '  &nbsp &nbsp';
-                    echo '<strong>ID#</strong>: ' .$id.  '  &nbsp &nbsp';
-                    echo '<strong>Password#</strong>: ' .$details["password"].  '  &nbsp &nbsp';
-                    echo '</p>';
-                    echo '<button class="refuseButton">Delete</button>';
-                    echo '</div>';
-                    echo '</div>';
 
-                }
+            while ($row = mysqli_fetch_assoc($employees)){ 
+                echo '<div class="card">';
+                echo 'inside of loop'; 
+                echo '</div>';  
+
+            }
+
+            echo '<div class="card">';
+                echo 'outside of loop'; 
+                echo '</div>';  
+
+
             ?>
+            </div>
 
         </div>
 

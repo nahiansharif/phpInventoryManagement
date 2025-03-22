@@ -53,44 +53,38 @@ include("../database.php");
                     <option value="478325">
 
                     <?php
-                    foreach ($employees as $id => $details) {
-                        echo "<option value=\"$id\">";
-                    }
+              
                     ?>
                 </datalist>
 
         </div>
 
         <div class="container">
-            <div class="card">
-                <img src="../employee.png" alt="Plane Image" class="planePic">
-                    <div>
-                        <h1>Kash Naplique</h1>
-                        <p>
-                            <strong>Title</strong>: Manager  &nbsp &nbsp
-                            <strong>ID#</strong>: 401253  &nbsp &nbsp
-                            <strong>Password</strong>: !dsldsjd  &nbsp &nbsp
-                        </p>
-                        <button class="refuseButton">Delete</button>
-                    </div>
-            </div>
+
 
             <?php
-                foreach ($employees as $id => $details) {
+            while ($row = mysqli_fetch_assoc($employees)){   
+                if($row["role"] != 'admin'){
+
                     echo '<div class="card">';
                     echo '<img src="../employee.png" alt="Plane Image" class="planePic">'; 
                     echo '<div>';
-                    echo '<h1>' . $details["full_name"] . '</h1>';
+                    echo '<h1>' . $row["firstname"], " ", $row["lastname"] . '</h1>';
                     echo '<p>';
-                    echo '<strong>Title</strong>: ' .$details["title"].  '  &nbsp &nbsp';
-                    echo '<strong>ID#</strong>: ' .$id.  '  &nbsp &nbsp';
-                    echo '<strong>Password#</strong>: ' .$details["password"].  '  &nbsp &nbsp';
+                    echo '<strong>Title</strong>: ' .$row["role"].  '  &nbsp &nbsp';
+                    echo '<strong>ID#</strong>: ' .$row["userID"].  '  &nbsp &nbsp';
+                    echo '<strong>Password#</strong>: ' .$row["password"].  '  &nbsp &nbsp';
                     echo '</p>';
                     echo '<button class="refuseButton">Delete</button>';
                     echo '</div>';
                     echo '</div>';
-
                 }
+
+            }
+                
+                   
+            
+                
             ?>
 
         </div>

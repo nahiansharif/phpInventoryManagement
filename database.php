@@ -14,4 +14,10 @@ if($conn){
     echo "not connected"; 
 }
 
+
+$employees = mysqli_query($conn, "SELECT * FROM users"); 
+
+
 ?>
+
+
