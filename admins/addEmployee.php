@@ -81,24 +81,24 @@
         <div class="plane-select">
             <label for="plane">Select Employee Type:</label>
             
-            <select id="plane-list" name="plane-list" class="employeeRole">
+            <select id="employee-role-list" name="plane-list" class="employeeRole">
                 <option>Manager</option>
                 <option>Staff</option>
             </select>
         </div>
 
         <label>First Name:</label>
-        <input type="text"  placeholder="First Name" class="employeeFN">
+        <input type="text"  placeholder="First Name" id="employeeFN">
 
 
         <label>Last Name:</label>
-        <input type="text" placeholder="Last Name" class="employeeLN">
+        <input type="text" placeholder="Last Name" id="employeeLN">
 
         <label>Password:</label>
-        <input type="text" placeholder="Password" class="employeePass">
+        <input type="text" placeholder="Password" id="employeePass">
 
 
-        <input type="button" class="approveButton employeeAddButton">
+        <button type="button" class="approveButton employeeAddButton"> Add New Employee</button>
     </form>
 </div>
 
@@ -112,29 +112,65 @@
 
     <script>
     // Create variables and store the values from the form
-    const employeeRole = document.querySelector("#plane-list").value; // Get the selected role
-    const firstName = document.querySelector(".employeeFN").value;   // Get the first name
-    const lastName = document.querySelector(".employeeLN").value;    // Get the last name
-    const password = document.querySelector(".employeePass").value;  // Get the password
+
 
     // Example: Logging the values to the console (you can use these values as needed)
     
     const addButton = document.querySelector('.employeeAddButton');
     addButton.addEventListener('click', () => {
-    console.log("Role:", employeeRole);
-    console.log("First Name:", firstName);
-    console.log("Last Name:", lastName);
-    console.log("Password:", password);
+    
+        const employeeRole = document.getElementById("employee-role-list").value; 
+        const firstName = document.getElementById("employeeFN").value; 
+        const lastName = document.getElementById("employeeLN").value; 
+        const password = document.getElementById("employeePass").value; 
 
-                const data = {
-                    action: 'createEmployee', 
-                    role: employeeRole, 
-                    firstname: firstName, 
-                    lastname: lastName,
-                    password: password
+
+        console.log("Role:", employeeRole);
+        console.log("First Name:", firstName);
+        console.log("Last Name:", lastName);
+        console.log("Password:", password);
+
+        const data = {
+            action: 'createEmployee', 
+            role: employeeRole, 
+            firstname: firstName, 
+            lastname: lastName,
+            password: password
+        };
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '../database.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        console.log('Data sent successfully:', xhr.responseText);
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if(response.success){
+                                console.log("Database updated");
+                                //Handle success response
+                            } else{
+                                console.error("Database error: ", response.error);
+                                //Handle error response.
+                            }
+
+                        }catch (e){
+                            console.error("Error parsing JSON: ", e);
+                        }
+
+                    } else {
+                        // Error! Handle the error.
+                        console.error('Error sending data:', xhr.status, xhr.statusText);
+                        // Handle error response.
+                    }
                 };
-                console.log(data)
-            }); 
+                xhr.onerror = function(){
+                    console.error("Network error occured.")
+                }
+
+                xhr.send(JSON.stringify(data));                
+    }); 
 
 </script>
     
