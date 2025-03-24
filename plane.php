@@ -1,49 +1,3 @@
-<?php
-// Create a hashmap (associative array)
-$searchedPlane = 'fd'; 
-$planes = array(
-    "A3001" => array(
-        "image" => "boeing_747.jpg",
-        "condition" => "Good",
-        "fuel" => "Full",
-        "tire" => "New",
-        "engine" => "Operational"
-    ),
-    "A380" => array(
-        "image" => "airbus_a380.jpg",
-        "condition" => "Excellent",
-        "fuel" => "Half",
-        "tire" => "Used",
-        "engine" => "Operational"
-    ),
-    "A372" => array(
-        "image" => "cessna_172.jpg",
-        "condition" => "Fair",
-        "fuel" => "Low",
-        "tire" => "Worn",
-        "engine" => "Requires Maintenance"
-    ),
-    "A378" => array(
-        "image" => "cessna_172.jpg",
-        "condition" => "Fair",
-        "fuel" => "Low",
-        "tire" => "Worn",
-        "engine" => "Requires Maintenance"
-    ),
-    "B378" => array(
-        "image" => "cessna_172.jpg",
-        "condition" => "Fair",
-        "fuel" => "Low",
-        "tire" => "Worn",
-        "engine" => "Requires Maintenance"
-    )
-);
-
-// Accessing the values
-// echo "Boeing 747 Fuel Status: " . $planes["Boeing 747"]["fuel"] . "\n";
-// echo "Airbus A380 Condition: " . $planes["Airbus A380"]["condition"] . "\n";
-// echo "Cessna 172 Engine Status: " . $planes["Cessna 172"]["engine"] . "\n";
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -52,6 +6,13 @@ $planes = array(
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" href="../style.css">
+    <style>
+        .card {
+            height: 300px; /* Adjust height as needed */
+            
+        }
+
+    </style>
 
 </head>
 <body>
@@ -67,23 +28,20 @@ $planes = array(
    
         </div>
 
-        <div class="container">        
-            <div class="card">
-                <img src="../plane.png" alt="Plane Image">
-                <div>
-                    <h1 id="headerName">as</h1>
-                    <h1> <?php echo $searchedPlane; ?></h1>
-                    <p><strong>Condition</strong>: great  &nbsp &nbsp<strong>Fuel</strong>: High  &nbsp &nbsp<strong>Tire</strong>: Good  &nbsp &nbsp<strong>Engine</strong>: Good</p>
-                </div>
-            </div>
+        <div class="container">  
+            
 
             <?php
-            foreach ($planes as $id => $plane) {
+            include("../database.php"); 
+
+            while ($row = mysqli_fetch_assoc($planes)){  
                 echo '<div class="card">';
                 echo '<img src="../plane.png" alt="Plane Image" class="planePic">';
                 echo '<div>';
-                echo '<h1>' . $id . '</h1>';
-                echo '<p><strong>Condition</strong>: ' . $plane["condition"] . ' &nbsp &nbsp<strong>Fuel</strong>: ' . $plane["fuel"] . ' &nbsp &nbsp<strong>Tire</strong>: ' . $plane["tire"] . ' &nbsp &nbsp<strong>Engine</strong>: ' . $plane["engine"] . '</p>';
+                echo '<h1>' . $row['NameID'] . '</h1>';
+                echo '<p><strong>Condition</strong>: ' . $row["state"] . ' &nbsp &nbsp<strong>Fuel</strong>: ' . $row["fuel"] . ' &nbsp &nbsp<strong>Engine</strong>: ' . $row["motor"] . '</p>';
+                echo '<p> <strong>Tire 1</strong>: ' . $row["tire1"] .  '&nbsp &nbsp<strong>Tire 2</strong>: ' . $row["tire2"] . '&nbsp &nbsp<strong>Tire 3</strong>: ' . $row["tire3"] . '</p>';
+                echo '<p> <strong>Tire 4</strong>: ' . $row["tire4"] .  '&nbsp &nbsp<strong>Tire 5</strong>: ' . $row["tire5"] . '&nbsp &nbsp<strong>Tire 6</strong>: ' . $row["tire6"] . '</p>';
                 echo '</div>'; 
                 echo '</div>'; 
 

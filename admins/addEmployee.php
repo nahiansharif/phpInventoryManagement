@@ -40,7 +40,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        label, input, select, textarea {
+        label, input, select {
             display: block;
             margin-bottom: 10px;
             width: calc(100% - 22px); /* Adjust for padding and border */
@@ -50,10 +50,7 @@
             box-sizing: border-box; /* Include padding and border in element's total width and height */
         }
 
-        textarea {
-            resize: vertical; /* Allow vertical resizing */
-            height: 150px;
-        }
+
 
         
 
@@ -84,26 +81,24 @@
         <div class="plane-select">
             <label for="plane">Select Employee Type:</label>
             
-            <select id="plane-list" name="plane-list">
-                <option value="plane1">Manager</option>
-                <option value="plane2">Staff</option>
+            <select id="plane-list" name="plane-list" class="employeeRole">
+                <option>Manager</option>
+                <option>Staff</option>
             </select>
         </div>
 
-        <label for="fuel">First Name:</label>
-        <input type="number" id="fuel" name="fuel" placeholder="First Name">
+        <label>First Name:</label>
+        <input type="text"  placeholder="First Name" class="employeeFN">
 
 
-        <label for="fuel">Last Name:</label>
-        <input type="number" id="fuel" name="fuel" placeholder="Last Name">
+        <label>Last Name:</label>
+        <input type="text" placeholder="Last Name" class="employeeLN">
 
-        <label for="fuel">Password:</label>
-        <input type="number" id="fuel" name="fuel" placeholder="Password">
+        <label>Password:</label>
+        <input type="text" placeholder="Password" class="employeePass">
 
-        <label for="fuel">Retype Password:</label>
-        <input type="number" id="fuel" name="fuel" placeholder="Retype Password">
 
-        <input type="submit" value="Submit" class="approveButton">
+        <input type="button" class="approveButton employeeAddButton">
     </form>
 </div>
 
@@ -114,6 +109,34 @@
     
 
     <a href="../index.php" class="logout">Log Out</a>
+
+    <script>
+    // Create variables and store the values from the form
+    const employeeRole = document.querySelector("#plane-list").value; // Get the selected role
+    const firstName = document.querySelector(".employeeFN").value;   // Get the first name
+    const lastName = document.querySelector(".employeeLN").value;    // Get the last name
+    const password = document.querySelector(".employeePass").value;  // Get the password
+
+    // Example: Logging the values to the console (you can use these values as needed)
+    
+    const addButton = document.querySelector('.employeeAddButton');
+    addButton.addEventListener('click', () => {
+    console.log("Role:", employeeRole);
+    console.log("First Name:", firstName);
+    console.log("Last Name:", lastName);
+    console.log("Password:", password);
+
+                const data = {
+                    action: 'createEmployee', 
+                    role: employeeRole, 
+                    firstname: firstName, 
+                    lastname: lastName,
+                    password: password
+                };
+                console.log(data)
+            }); 
+
+</script>
     
 </body>
 </html>

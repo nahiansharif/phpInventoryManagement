@@ -1,0 +1,2 @@
+1. delete (create backup) ibdata1 and silvee folder from xampp -> MySQL -> data
+2. copy this silvee folder from project file to here 

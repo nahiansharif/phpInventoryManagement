@@ -1,16 +1,4 @@
-<?php
 
-include("../database.php"); 
-
-if (mysqli_num_rows($employees) > 0){
-    echo "its working";
-
-
-} else { 
-    echo "DB not working"; 
-}
-
-?> 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -77,16 +65,32 @@ if (mysqli_num_rows($employees) > 0){
             
             <?php
 
-            while ($row = mysqli_fetch_assoc($employees)){ 
-                echo '<div class="card">';
-                echo 'inside of loop'; 
-                echo '</div>';  
+            
+            include("../database.php"); 
+
+            while ($row = mysqli_fetch_assoc($employees)){   
+                if($row["role"] != 'admin'){
+                    if($row["role"] === "staff"){
+
+                        echo '<div class="card">';
+                        echo '<img src="../employee.png" alt="Plane Image" class="planePic"> <div>'; 
+                        echo  '<div class="row">'; 
+                        echo '<h1>' . $row["firstname"], " ", $row["lastname"] . '</h1> <p>is <strong>' . $row["status"] . '</strong></p>'; 
+                        echo '</div> <br>';
+                        echo '<p> <strong>Title</strong>: '. $row["role"]  .'&nbsp &nbsp <strong>ID#</strong>: '. $row["userID"] .'&nbsp &nbsp </p>'; 
+                        if($row["status"] === "busy"){
+
+                            echo '<p>Working on Task# ' . $row["tasks"] .' </p>'; 
+
+                        }
+                        echo "</div></div>";
+                    }
+
+
+
+                }
 
             }
-
-            echo '<div class="card">';
-                echo 'outside of loop'; 
-                echo '</div>';  
 
 
             ?>

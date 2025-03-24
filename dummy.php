@@ -119,33 +119,90 @@
 
     <a href="../index.php" class="logout">Log Out</a>
     <script>
-        const cards = document.querySelectorAll('.card');
 
-        cards.forEach(card => {
-            const minusButton = card.querySelector('.minus');
-            const plusButton = card.querySelector('.plus');
-            const quantityDisplay = card.querySelector('.quantity');
-            const buyButton = card.querySelector('.buy'); 
-            const itemName = card.querySelector('.itemName'); 
 
-            let quantity = parseInt(quantityDisplay.textContent.slice(1)); // Extract the number
+            const bbuyButton = document.querySelector('.buyButton');
+            bbuyButton.addEventListener('click', () => {
 
-            minusButton.addEventListener('click', () => {
-                if (quantity > 0) {
-                    quantity--;
-                    quantityDisplay.textContent = `x${quantity}`;
-                }
+                console.log("buying \nEngine: " + engineQuantity + " Tire: " + tireQuantity + " Fuel: " + fuelQuantity + " Plane: " + planeQuantity); 
+
+                <?php 
+
+                session_start();
+                $username = $_SESSION['username'];
+                $currentManager = mysqli_query($conn, "SELECT * FROM users WHERE userID =" + $username); 
+                mysqli_query($conn, "INSERT INTO purchase(managerUserID, plane, fuel, tire, motor) VALUES (" + $username +","+ planeQuantity+","+fuelQuantity +","+tireQuantity +","+engineQuantity +")");
+
+                ?> 
+
+                
+                
+                
             });
 
-            plusButton.addEventListener('click', () => {
-                quantity++;
-                quantityDisplay.textContent = `x${quantity}`;
-            });
 
-            buyButton.addEventListener('click', () => {
-                console.log("bought " + quantity + " " + itemName.textContent); 
-            });
-        });
     </script>
+        
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+<?php
+// database.php
+
+$contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+
+if ($contentType === "application/json") {
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
+
+
+
+    if (isset($data['action']) && $data['action'] === 'purchase') {
+        handlePurchase($conn, $data);
+    } else if (isset($data['action']) && $data['action'] === 'reject_order') {
+        handleRejectOrder($conn, $data);
+    } else if (isset($data['action']) && $data['action'] === 'accept_order') {
+        handleAcceptOrder($conn, $data);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Invalid action']);
+    }
+}
+
+function handlePurchase($conn, $data) {
+    $engine = $data['engine'];
+    $tire = $data['tire'];
+    $fuel = $data['fuel'];
+    $plane = $data['plane'];
+
+    mysqli_query($conn, "INSERT INTO purchase (managerUserID, plane, fuel, tire, motor) VALUES ('" . getCurrentUser() . "', " . $plane . ", " . $fuel . ", " . $tire . ", " . $engine . ");");
+    echo json_encode(['success' => true, 'message' => 'Purchase order created']);
+}
+
+function handleRejectOrder($conn, $data) {
+    $id = $data['purchaseID'];
+    mysqli_query($conn, "DELETE FROM purchase WHERE purchaseID = " . $id);
+    echo json_encode(['success' => true, 'message' => 'Order rejected']);
+
+}
+
+function handleAcceptOrder($conn, $data) {
+    $id = $data['purchaseID'];
+    $order = mysqli_query($conn, "SELECT * FROM purchase WHERE purchaseID = " . $id);
+
+    while ($row = mysqli_fetch_assoc($order)) {
+        mysqli_query($conn, "UPDATE storehouse SET plane = plane + " . $row['plane'] . ", fuel = fuel + " . $row['fuel'] . ", tire = tire + " . $row['tire'] . ", motor = motor + " . $row['motor']);
+    }
+
+    mysqli_query($conn, "DELETE FROM purchase WHERE purchaseID = " . $id);
+    echo json_encode(['success' => true, 'message' => 'Order accepted and store updated']);
+}
+?>

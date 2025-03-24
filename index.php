@@ -1,35 +1,36 @@
 <?php
 
-$users = [
-    'admin1' => ['password' => 'adminpass', 'role' => 'admin'],
-    'admin2' => ['password' => 'adminpass2', 'role' => 'admin'],
-    'manager1' => ['password' => 'managePass', 'role' => 'manager'],
-    'manager2' => ['password' => 'managePass2', 'role' => 'manager'],
-    'staff1' => ['password' => 'staffpass', 'role' => 'staff'],
-    'staff2' => ['password' => 'staffpass2', 'role' => 'staff'],
-]; 
+include_once("database.php"); 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $username = $_POST['username'];
     $password = $_POST['password'];
+    session_start();
+    setCurrentUser($username);
 
-    if( isset($users[$username]) && $users[$username]['password'] === $password){
-        $role = $users[$username]['role']; 
+   
+    while ($row = mysqli_fetch_assoc($employees)){   
+        if(($row["userID"] === $username) && ($row["password"] === $password)){
+            
 
-        switch($role){
-            case 'admin':
-                header('Location:admins/admin.php'); 
-                exit; 
-            case 'manager':
-                header('Location:managers/manager.php'); 
-                exit; 
-            case 'staff':
-                header('Location:staff/staff.php'); 
-                exit; 
+            switch($row["role"]){
+                case 'admin':
+                    header('Location:admins/admin.php'); 
+                    exit; 
+                case 'manager':
+                    header('Location:managers/manager.php'); 
+                    exit; 
+                case 'staff':
+                    header('Location:staff/staff.php'); 
+                    exit;
+                }
+            
+
         }
-    } else {
-        echo "invalid username or password"; 
+
     }
+
+
 }
 
 

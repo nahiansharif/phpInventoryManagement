@@ -48,14 +48,12 @@
 
     <div class="main-content">
 
-    <div class="infoBar">
-            <p>
-                <strong>Plane: </strong> 23 &nbsp &nbsp 
-                <strong>Fuel: </strong> 500 gallons &nbsp &nbsp 
-                <strong>Tire: </strong> 60 &nbsp &nbsp 
-                <strong>Engine: </strong> 15 
-            </p>
-        </div>
+    <?php
+include '../infoBar.php';
+
+?>
+
+
         <div class="container">
 
             <div class="card">
@@ -114,18 +112,33 @@
         </div>
 
        <div class="container">
-       <button class="approveButton buyButton">buy</button>
+       <button class="approveButton buyButton" type="submit">Buy</button>
        </div>
     </div>
 
     <a href="../index.php" class="logout">Log Out</a>
+    <?php
+ 
+
+ include_once("../database.php"); 
+ 
+
+
+// ... your PHP code ...
+
+
+
+//... etc.
+?>
+ 
+ 
     <script>
 
 //   ENGINE STUFF
             const engineMinusButton = document.querySelector('.engineMinus');
             const enginePlusButton = document.querySelector('.enginePlus');
             const engineQuantityDisplay = document.querySelector('.engineQuantity');
-            let engineQuantity = parseInt(engineQuantityDisplay.textContent.slice(1)); // Extract the number
+            let engineQuantity = 0;
 
             engineMinusButton.addEventListener('click', () => {
                 
@@ -172,14 +185,14 @@
             fuelMinusButton.addEventListener('click', () => {
                 
                 if (fuelQuantity > 0) {
-                    fuelQuantity--;
-                    fuelQuantityDisplay.textContent = `x${fuelQuantity}`;
+                    fuelQuantity = fuelQuantity - 1000;
+                    fuelQuantityDisplay.textContent = `x${fuelQuantity}`;tireQuantityDisplay.textContent = `x${tireQuantity}`;engineQuantityDisplay.textContent = `x${engineQuantity}`;
                 }
             });
 
             fuelPlusButton.addEventListener('click', () => {
                 
-                fuelQuantity++;
+                fuelQuantity = fuelQuantity + 1000;
                 fuelQuantityDisplay.textContent = `x${fuelQuantity}`;
             });
 
@@ -203,15 +216,69 @@
                 planeQuantityDisplay.textContent = `x${planeQuantity}`;
             });
 
-            //buy items buyButton
+//buy items buyButton
 
-            const bbuyButton = document.querySelector('.buyButton');
-            bbuyButton.addEventListener('click', () => {
-                
-                console.log("buying \nEngine: " + engineQuantity + " Tire: " + tireQuantity + " Fuel: " + fuelQuantity + " Plane: " + planeQuantity); 
+            const buyButton = document.querySelector('.buyButton');
+            buyButton.addEventListener('click', () => {
+                const data = {
+                    action: 'purchase', 
+                    engine: engineQuantity,
+                    tire: tireQuantity,
+                    fuel: fuelQuantity,
+                    plane: planeQuantity,
+                };
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '../database.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        console.log('Data sent successfully:', xhr.responseText);
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if(response.success){
+                                console.log("Database updated");
+                                //Handle success response
+                            } else{
+                                console.error("Database error: ", response.error);
+                                //Handle error response.
+                            }
+
+                        }catch (e){
+                            console.error("Error parsing JSON: ", e);
+                        }
+
+                    } else {
+                        // Error! Handle the error.
+                        console.error('Error sending data:', xhr.status, xhr.statusText);
+                        // Handle error response.
+                    }
+                };
+                xhr.onerror = function(){
+                    console.error("Network error occured.")
+                }
+
+                xhr.send(JSON.stringify(data));
+
+                // reset everything after 
+                planeQuantity = 0; 
+                fuelQuantity = 0;
+                tireQuantity = 0; 
+                engineQuantity = 0; 
+                planeQuantityDisplay.textContent = `x${planeQuantity}`;
+                fuelQuantityDisplay.textContent = `x${fuelQuantity}`;
+                tireQuantityDisplay.textContent = `x${tireQuantity}`;
+                engineQuantityDisplay.textContent = `x${engineQuantity}`;
+                alert("Purchase order sent to Admin Successfully!"); 
+
+
+
             });
 
 
     </script>
+
+
 </body>
 </html>

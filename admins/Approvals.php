@@ -1,39 +1,4 @@
-<?php
 
-$approvals = [
-    [
-        'name' => 'Manager 365',
-        'amount' => 3,
-        'text' => 'engine',
-        'status' => null,
-    ],
-    [
-        'name' => 'Supervisor Alpha',
-        'amount' => 10,
-        'text' => 'project proposal',
-        'status' => false,
-    ],
-    [
-        'name' => 'Director Beta',
-        'amount' => 50,
-        'text' => 'budget request',
-        'status' => true,
-    ],
-    [
-        'name' => 'Team Lead Gamma',
-        'amount' => 1,
-        'text' => 'time off',
-        'status' => false,
-    ],
-    [
-        'name' => 'VP Delta',
-        'amount' => 100,
-        'text' => 'strategic plan',
-        'status' => null,
-    ],
-];
-
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -49,9 +14,7 @@ $approvals = [
             
         }
 
-        .card div {
-            flex-grow: 0; 
-        }
+        
     </style>
 </head>
 <body>
@@ -64,55 +27,40 @@ $approvals = [
     </div>
     <div class="main-content">
      
-        <div class="infoBar">
-            <p>
-                <strong>Plane: </strong> 23 &nbsp &nbsp 
-                <strong>Fuel: </strong> 500 gallons &nbsp &nbsp 
-                <strong>Tire: </strong> 60 &nbsp &nbsp 
-                <strong>Engine: </strong> 15 
-            </p>
-        </div>
+    <?php
+include '../infoBar.php';
+?>
 
 
         <div class="container">
 
 
 
-        
-            <div class="card">
-                
-                <div>
-                    <h1>Manager 365</h1> <!-- display name here -->
-                    <p> wants to buy <strong>15 tires</strong></p> <!-- display integer first, and then the tex inside of the strong tag only, "wants to buy" will remain there outside of strong tag always -->
-
-                    <button class="refuseButton">Refuse</button>
-                    <button class="approveButton">Approve</button>
-                </div>
-                
-                    
-                
-            </div>
-
             <?php
-                foreach ($approvals as $approval) {
-                    echo '<div class="card">';
-                    echo '<div>';
-                    echo '<h1>' . $approval['name'] . '</h1>';
-                    echo '<p> wants to buy <strong>' . $approval['amount'] . ' ' . $approval['text'] . '</strong></p>';
-                    echo '<button class="refuseButton">Refuse</button>';
-                    echo '<button class="approveButton">Approve</button>';
-                    echo '</div>';
-                    echo '</div>';
+
+            include_once("../database.php"); 
+
+            
+            
+            while ($row = mysqli_fetch_assoc($purchase)){  
+                
+                    $name = mysqli_query($conn, "SELECT firstname, lastname FROM users WHERE userID = ". $row['managerUserID']); 
+                    if ($name) {
+                        $rowName = mysqli_fetch_assoc($name); // Fetch the row as an associative array
+                        $fullName = $rowName['firstname'] . ' ' . $rowName['lastname'];
+                    
+                        echo '<div class="card">';
+                        echo '<div>';
+                        echo '<h1>Manager ' . $fullName . " " . '</h1>';
+                        echo '<p> wants to buy <br><strong>Plane:</strong> ' . $row['plane'] . '&nbsp&nbsp <strong>Fuel:</strong> ' . $row['fuel'] . ' &nbsp&nbsp<strong>Tire:</strong> ' . $row['tire'] .' &nbsp&nbsp<strong>Engine:</strong> ' . $row['motor'] .'</strong></p>';
+                        echo '<button class="refuseButton RejectOrderButton" value="'.$row['purchaseID'].'">Refuse</button>';
+                        echo '<button class="approveButton approveOrderButton" value="'.$row['purchaseID'].'">Approve</button>';
+                        echo '</div>';
+                        echo '</div>';
+                    }
                 } 
             ?>
 
-
-            
-
-            
-
-            
-        
         </div>
         
 
@@ -120,6 +68,111 @@ $approvals = [
     </div>
 
     <a href="../index.php" class="logout">Log Out</a>
+    <script>
+        
+    document.querySelectorAll(".RejectOrderButton").forEach(button => {
+        button.addEventListener("click", function() {
+            console.log("rejected Purchase ID:", this.value); 
+            // ajax 
+            const data = {
+            action: 'reject_order', // Add an action field
+            purchaseID: this.value, // Send the purchase ID
+            };
+
+            const xhr = new XMLHttpRequest();
+                xhr.open('POST', '../database.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        // Success! Handle the response from the PHP file.
+                        console.log('Data sent successfully:', xhr.responseText);
+                        // Optionally, update the UI based on the response.
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if(response.success){
+                                console.log("Database updated");
+                                //Handle success response
+                            } else{
+                                console.error("Database error: ", response.error);
+                                //Handle error response.
+                            }
+
+                        }catch (e){
+                            console.error("Error parsing JSON: ", e);
+                        }
+
+                    } else {
+                        // Error! Handle the error.
+                        console.error('Error sending data:', xhr.status, xhr.statusText);
+                        // Handle error response.
+                    }
+                };
+                xhr.onerror = function(){
+                    console.error("Network error occured.")
+                }
+
+                xhr.send(JSON.stringify(data));
+
+                location.reload();
+
+
+
+            // mysqli_query($conn, "DELETE FROM purchase WHERE purchaseID = ". this.value);
+        });
+    });
+
+    document.querySelectorAll(".approveOrderButton").forEach(button => {
+        button.addEventListener("click", function() {
+            
+            console.log("accepted Purchase ID:", this.value); 
+
+            // ajax 
+            const data = {
+            action: 'accept_order', 
+            purchaseID: this.value, 
+            };
+
+            const xhr = new XMLHttpRequest();
+                xhr.open('POST', '../database.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        console.log('Data sent successfully:', xhr.responseText);
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if(response.success){
+                                console.log("Database updated");
+                            } else{
+                                console.error("Database error: ", response.error);
+                            }
+
+                        }catch (e){
+                            console.error("Error parsing JSON: ", e);
+                        }
+
+                    } else {
+                        console.error('Error sending data:', xhr.status, xhr.statusText);
+                    }
+                };
+                xhr.onerror = function(){
+                    console.error("Network error occured.")
+                }
+
+                xhr.send(JSON.stringify(data));
+
+            // mysqli_query($conn, "UPDATE storehouse SET plane = plane +" " WHERE purchaseID = " this.value);
+
+            location.reload();
+
+
+        });
+    });
+
+
+
+    </script>
     
 </body>
 </html>

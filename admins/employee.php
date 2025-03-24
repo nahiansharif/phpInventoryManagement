@@ -2,6 +2,14 @@
 
 include("../database.php"); 
 
+$managersANDstaff = mysqli_query($conn, 
+    "SELECT 
+    SUM(CASE WHEN role = 'manager' THEN 1 ELSE 0 END) AS manager_count,
+    SUM(CASE WHEN role = 'staff' THEN 1 ELSE 0 END) AS staff_count
+    FROM users;
+    "); 
+$employeeNums = mysqli_fetch_assoc($managersANDstaff);
+
 ?> 
 
 <!DOCTYPE html>
@@ -35,8 +43,8 @@ include("../database.php");
 
         <div class="infoBar">
             <p>
-                <strong>Managers: </strong> 23 &nbsp &nbsp 
-                <strong>Staff: </strong> 500 &nbsp &nbsp 
+                <strong>Managers: </strong> <?php echo $employeeNums['manager_count']; ?>  &nbsp &nbsp 
+                <strong>Staff: </strong> <?php echo $employeeNums['staff_count'];  ?> &nbsp &nbsp 
                 <a href="addEmployee.php" class="approveButton">Add</a>
             </p>
             
@@ -97,6 +105,9 @@ include("../database.php");
     
 
     <a href="../index.php" class="logout">Log Out</a>
+
+
+
     
 </body>
 </html>
