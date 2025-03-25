@@ -26,6 +26,7 @@ $employees = mysqli_query($conn, "SELECT * FROM users");
 $storeHouse = mysqli_query($conn, "SELECT * FROM storehouse"); 
 $planes = mysqli_query($conn, "SELECT * FROM plane"); 
 $purchase = mysqli_query($conn, "SELECT * FROM purchase"); 
+$tasks = mysqli_query($conn, "SELECT * FROM task"); 
 
 
 
@@ -111,8 +112,7 @@ if ($contentType === "application/json") {
 
         mysqli_query($conn, "INSERT INTO task (TargetPlane, Fuel, 
         tire1, tire2, tire3, tire4, tire5, tire6, motor, state, taskStatus, 
-        staffUserID1, staffUserID2, staffUserID3, staffUserID4, staffUserID5, 
-        staffUserID6, staffUserID7, staffUserID8, comments, reporter ) VALUES
+         comments, reporter, neededWorkers ) VALUES
         ('". $data['planeName'] ."',
          '". $data['fuelNum'] ."',
          '". $data['tire1'] ."',
@@ -124,16 +124,9 @@ if ($contentType === "application/json") {
          '". $data['engine'] ."', 
          '". $stateCalculation ."',
          'On Hold',
-         '00',
-         '00',
-         '00',
-         '00',
-         '00',
-         '00',
-         '00',
-         '00',
          '". $data['comments'] ."',         
-         '". getCurrentUser() ."');");
+         '". getCurrentUser() ."',
+         '". $data['neededWorkers'] ."');");
 
          echo json_encode(['success' => true, 'message' => 'Order rejected']);
 

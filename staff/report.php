@@ -27,9 +27,9 @@
             width: 400px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             background-color: #00aaff;
-    width: 350px;
-    padding: 40px;
-    border-radius:6px;
+            width: 350px;
+            padding: 40px;
+            border-radius:6px;
         }
 
         label, input, select, textarea {
@@ -84,63 +84,60 @@
                 while ($row = mysqli_fetch_assoc($planes)){
                     echo "<option value=" . $row['NameID'] . "> " . $row['NameID'] . "</option>"; 
                 }
-
-
-
             ?>
                 
             </select>
         </div>
 
         <label for="fuel">Fuel Level (70,000 Gallons Max):</label>
-        <input type="number" id="fuel" name="fuel" value="0" placeholder="Gallons">
+        <input type="number" id="fuel" name="fuel" value="0" placeholder="Gallons" min="0" max="70000">
         
         <label for="tire1">tire 1 condition:</label>
         <select id="tire1" name="tire1">
             <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
+            <option value="medicore">medicore</option>
             <option value="bad">Bad</option>
         </select>
 
         <label for="tire2">tire 2 condition:</label>
         <select id="tire2" name="tire2">
             <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
+            <option value="medicore">medicore</option>
             <option value="bad">Bad</option>
         </select>
 
         <label for="tire3">tire 3 condition:</label>
         <select id="tire3" name="tire3">
             <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
+            <option value="medicore">medicore</option>
             <option value="bad">Bad</option>
         </select>
 
         <label for="tire4">tire 4 condition:</label>
         <select id="tire4" name="tire4">
             <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
+            <option value="medicore">medicore</option>
             <option value="bad">Bad</option>
         </select>
 
         <label for="tire5">tire 5 condition:</label>
         <select id="tire5" name="tire5">
             <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
+            <option value="medicore">medicore</option>
             <option value="bad">Bad</option>
         </select>
 
         <label for="tire6">tire 6 condition:</label>
         <select id="tire6" name="tire6">
             <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
+            <option value="medicore">medicore</option>
             <option value="bad">Bad</option>
         </select>
        
         <label for="engine">Engine Condition:</label>
         <select id="engine" name="engine">
-            <option value="good">Good</option>
-            <option value="mediocre">Mediocre</option>
+            <option value="Good">Good</option>
+            <option value="medicore">medicore</option>
             <option value="bad">Bad</option>
         </select>
         
@@ -235,8 +232,8 @@
 
             xhr.send(JSON.stringify(data));    
 
-            // alert("New Employee Added"); 
-            // location.reload(); 
+             alert("New task Added"); 
+             location.reload(); 
                 
             
 

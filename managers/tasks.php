@@ -44,8 +44,16 @@ $approvals = [
     <link rel="stylesheet" href="../style.css">
     <style>
         .card {
-            height: 350px; 
-            
+            height: 1400px; 
+            /* 
+            0 = 350
+
+            2 = 500
+
+            4 = 700
+
+            8 = 1400
+            */
         }
 
         .card div {
@@ -121,24 +129,57 @@ $approvals = [
             </div>
 
             <?php
-                foreach ($approvals as $approval) {
-                    echo '<div class="card">';
-                    echo '<div>';
-                    echo '<h1>' . $approval['name'] . '</h1>';
-                    echo '<p> wants to buy <strong>' . $approval['amount'] . ' ' . $approval['text'] . '</strong></p>';
-                    echo '<button class="refuseButton">Refuse</button>';
-                    echo '<button class="approveButton">Approve</button>';
+            include("../database.php"); 
+            while ($row = mysqli_fetch_assoc($tasks)){   
+                
+                echo '<div class="card">';
+                echo '<div>';
+
+                $fullname = mysqli_query($conn, "SELECT firstname, lastname FROM users WHERE userID = " .$row['reporter'] ); 
+                while ($row2 = mysqli_fetch_assoc($fullname)){ 
+                    echo "<h1> ". $row2["firstname"] . " " . $row2["lastname"] . "'s Task# " . $row['TaskID']. " report: </h1>";
+                }
+
+                $numOfBadTires = 3; 
+                echo "<p> Plane <strong>" . $row['TargetPlane'].
+                "</strong>'s engine is <strong>". $row['motor'] ."</strong>, 
+                Fuel Level is <strong>". $row['Fuel'] ."</strong>,
+                and have <strong>". $numOfBadTires ."</strong> problematic Tires. </p>"; 
+
+                echo "<p>Need <strong>  " . $row['neededWorkers'] ."</strong> workers to finish the task. </p>"; 
+
+                echo "<p><strong>Comments: </strong> " . $row['comments'] ."</p>"; 
+
+                for($i = 1; $i <= $row['neededWorkers'] ; $i++){
+
+                    // this is where we show the name of all available staff
+                    echo "<p> select worker #". $i . "</p>"; 
+                    echo "<select id=worker".$i." >"; 
+
+                    mysqli_data_seek($employees, 0);
+                    while ($row3 = mysqli_fetch_assoc($employees)){   
+                        if(($row3["role"] === 'staff') && $row3["status"] === 'available'){
+                            echo "<option> ". $row3["firstname"] ." " . $row3["lastname"] ." </option>"; 
+                        }
+                    }
+                    echo "</select> <br><br>"; 
+
+                }
+                
+
+                echo "<button class='refuseButton refuseOrder'>Refuse</button>";
+                echo "<button class='approveButton approveOrder'>Approve</button>"; 
+                    
+                    
+                    // echo '<h1>' . $approval['name'] . '</h1>';
+                    // echo '<p> wants to buy <strong>' . $approval['amount'] . ' ' . $approval['text'] . '</strong></p>';
+                    // echo '<button class="refuseButton">Refuse</button>';
+                    // echo '<button class="approveButton">Approve</button>';
                     echo '</div>';
                     echo '</div>';
                 } 
             ?>
 
-
-            
-
-            
-
-            
         
         </div>
         
@@ -170,6 +211,24 @@ $approvals = [
             });
         });
     });
+    </script>
+
+    <!--  -->
+
+    <script>
+
+        //update status 
+
+        document.querySelectorAll(".refuseOrder").forEach(button => {
+            button.addEventListener("click", function() {
+
+                
+
+
+            }); 
+        });
+
+
     </script>
     
 </body>
