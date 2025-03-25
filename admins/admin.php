@@ -1,3 +1,17 @@
+<?php
+
+include("../database.php"); 
+
+$managersANDstaff = mysqli_query($conn, 
+    "SELECT 
+    SUM(CASE WHEN role = 'manager' THEN 1 ELSE 0 END) AS manager_count,
+    SUM(CASE WHEN role = 'staff' THEN 1 ELSE 0 END) AS staff_count
+    FROM users;
+    "); 
+$employeeNums = mysqli_fetch_assoc($managersANDstaff);
+
+?> 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,12 +66,12 @@
 
             <div class="card">
                 <p>Manager</p>
-                <p>250</p>
+                <p><?php echo $employeeNums['manager_count']; ?> </p>
             </div>
 
             <div class="card">
                 <p>Staff</p>
-                <p>250</p>
+                <p><?php echo $employeeNums['staff_count']; ?> </p>
             </div>
 
 

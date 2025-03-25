@@ -18,15 +18,9 @@
     
     <div class="main-content">
 
-        <div class="infoBar">
-            <p>
-                <strong>Plane: </strong> 23 &nbsp &nbsp 
-                <strong>Fuel: </strong> 500 gallons &nbsp &nbsp 
-                <strong>Tire: </strong> 60 &nbsp &nbsp 
-                <strong>Engine: </strong> 15 
-            </p>
-        </div>
-<br>
+    <?php
+include '../infoBar.php';
+?>
         <div class="infoBar">
             <p>
                 <strong>Task on plane A302: </strong> fix 

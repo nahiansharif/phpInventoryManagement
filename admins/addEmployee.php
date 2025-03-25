@@ -71,7 +71,7 @@
 
     <div class="infoBar">
             <p>
-                <strong> Plane Inspection Report Form </strong>
+                <strong> Add New Employee </strong>
             </p>
             <a href="employee.php" class="refuseButton">Back</a>
         </div>
@@ -124,19 +124,16 @@
         const lastName = document.getElementById("employeeLN").value; 
         const password = document.getElementById("employeePass").value; 
 
-
-        console.log("Role:", employeeRole);
-        console.log("First Name:", firstName);
-        console.log("Last Name:", lastName);
-        console.log("Password:", password);
-
         const data = {
             action: 'createEmployee', 
             role: employeeRole, 
             firstname: firstName, 
             lastname: lastName,
-            password: password
+            password: password,
         };
+
+
+        console.log(data);
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '../database.php', true);
@@ -169,7 +166,12 @@
                     console.error("Network error occured.")
                 }
 
-                xhr.send(JSON.stringify(data));                
+                xhr.send(JSON.stringify(data));    
+
+                alert("New Employee Added"); 
+                location.reload(); 
+                
+                
     }); 
 
 </script>

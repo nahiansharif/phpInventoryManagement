@@ -20,12 +20,16 @@
             padding:30px;
         }
 
-        form {
+        .form {
            
             padding: 20px;
             border-radius: 10px;
             width: 400px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: #00aaff;
+    width: 350px;
+    padding: 40px;
+    border-radius:6px;
         }
 
         label, input, select, textarea {
@@ -68,20 +72,29 @@
         </div>
 
 <div class="container">
-    <form>
+    <div class="form">
         <div class="plane-select">
             <label for="plane">Select a plane for inspection:</label>
             
             <select id="plane-list" name="plane-list">
-                <option value="plane1">Plane 1</option>
-                <option value="plane2">Plane 2</option>
-                <option value="plane3">Plane 3</option>
+
+            <?php 
+                include("../database.php"); 
+
+                while ($row = mysqli_fetch_assoc($planes)){
+                    echo "<option value=" . $row['NameID'] . "> " . $row['NameID'] . "</option>"; 
+                }
+
+
+
+            ?>
+                
             </select>
         </div>
 
-        <label for="fuel">Fuel Level in Gallons:</label>
-        <input type="number" id="fuel" name="fuel" placeholder="Gallons">
-
+        <label for="fuel">Fuel Level (70,000 Gallons Max):</label>
+        <input type="number" id="fuel" name="fuel" value="0" placeholder="Gallons">
+        
         <label for="tire1">tire 1 condition:</label>
         <select id="tire1" name="tire1">
             <option value="good">Good</option>
@@ -123,16 +136,16 @@
             <option value="mediocre">Mediocre</option>
             <option value="bad">Bad</option>
         </select>
-
+       
         <label for="engine">Engine Condition:</label>
         <select id="engine" name="engine">
             <option value="good">Good</option>
             <option value="mediocre">Mediocre</option>
             <option value="bad">Bad</option>
         </select>
-
+        
         <label for="engine">How many staff needed for maintainance?</label>
-        <select id="engine" name="engine">
+        <select id="neededWorkers" name="neededWorkers">
             <option value="2">2</option>
             <option value="4">4</option>
             <option value="8">8</option>
@@ -140,16 +153,98 @@
         </select>
 
         <label for="comments">Comments:</label>
-        <textarea id="comments" name="comments" maxlength="397"></textarea>
+        <textarea id="comments" name="comments"  maxlength="397">N/A</textarea>
 
-        <input type="submit" value="Submit" class="approveButton">
-    </form>
+        <button class="approveButton submitTask"> Submit </button>
+    </div>
 </div>
 
 
     </div>
 
     <a href="../index.php" class="logout">Log Out</a>
+
+    <script>
+
+        const createTaskButton = document.querySelector('.submitTask');
+        createTaskButton.addEventListener('click', () => { 
+
+                
+
+            const planeName = document.getElementById("plane-list").value; 
+            const fuelNum = document.getElementById("fuel").value;
+            
+            const tire1 = document.getElementById("tire1").value;
+            const tire2 = document.getElementById("tire2").value;
+            const tire3 = document.getElementById("tire3").value;
+            const tire4 = document.getElementById("tire4").value;
+            const tire5 = document.getElementById("tire5").value;
+            const tire6 = document.getElementById("tire6").value;
+            const engine = document.getElementById("engine").value;
+            
+            const neededWorkers = document.getElementById("neededWorkers").value;
+            const comments = document.getElementById("comments").value;
+            
+            const data = {
+                action: 'createTasks', 
+                planeName: planeName, 
+                fuelNum: fuelNum, 
+                tire1: tire1,
+                tire2: tire2,
+                tire3: tire3,
+                tire4: tire4,
+                tire5: tire5,
+                tire6: tire6,
+                engine: engine, 
+                neededWorkers: neededWorkers,
+                comments: comments,
+            };
+            
+            console.log(data)
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '../database.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        console.log('Data sent successfully:', xhr.responseText);
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if(response.success){
+                                console.log("Database updated");
+                                //Handle success response
+                            } else{
+                                console.error("Database error: ", response.error);
+                                //Handle error response.
+                            }
+
+                        }catch (e){
+                            console.error("Error parsing JSON: ", e);
+                        }
+
+                    } else {
+                        // Error! Handle the error.
+                        console.error('Error sending data:', xhr.status, xhr.statusText);
+                        // Handle error response.
+                    }
+                };
+                xhr.onerror = function(){
+                    console.error("Network error occured.")
+                }
+
+            xhr.send(JSON.stringify(data));    
+
+            // alert("New Employee Added"); 
+            // location.reload(); 
+                
+            
+
+        }); 
+
+
+
+    </script>
     
 </body>
 </html>

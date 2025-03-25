@@ -52,7 +52,6 @@ $employeeNums = mysqli_fetch_assoc($managersANDstaff);
 
         <br>
         <div class="search-bar">
-            
             <input type="text" placeholder="Search Employees" id="search-bar" list="search-suggestions" name="searchedTeacherName">
                 <datalist id="search-suggestions">
                 <!-- this is where I show all the plane names -->
@@ -83,7 +82,7 @@ $employeeNums = mysqli_fetch_assoc($managersANDstaff);
                     echo '<strong>ID#</strong>: ' .$row["userID"].  '  &nbsp &nbsp';
                     echo '<strong>Password#</strong>: ' .$row["password"].  '  &nbsp &nbsp';
                     echo '</p>';
-                    echo '<button class="refuseButton">Delete</button>';
+                    echo '<button class="refuseButton employeeRemoveButton" value="'.$row['userID'].'">Delete</button>';
                     echo '</div>';
                     echo '</div>';
                 }
@@ -106,7 +105,59 @@ $employeeNums = mysqli_fetch_assoc($managersANDstaff);
 
     <a href="../index.php" class="logout">Log Out</a>
 
+<script>
+        const removeButton = document.querySelector('.employeeRemoveButton');
+        
+        document.querySelectorAll(".employeeRemoveButton").forEach(button => {
+            button.addEventListener("click", function() {
 
+            // ajax 
+            const data = {
+            action: 'deleteEmployee', 
+            userID: this.value, 
+            };
+
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '../database.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        console.log('Data sent successfully:', xhr.responseText);
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if(response.success){
+                                console.log("Database updated");
+                                //Handle success response
+                            } else{
+                                console.error("Database error: ", response.error);
+                                //Handle error response.
+                            }
+
+                        }catch (e){
+                            console.error("Error parsing JSON: ", e);
+                        }
+
+                    } else {
+                        // Error! Handle the error.
+                        console.error('Error sending data:', xhr.status, xhr.statusText);
+                        // Handle error response.
+                    }
+                };
+                xhr.onerror = function(){
+                    console.error("Network error occured.")
+                }
+
+                xhr.send(JSON.stringify(data));    
+
+                alert("New Employee Added"); 
+                location.reload(); 
+
+            }); 
+
+        }); 
+</script>
 
     
 </body>

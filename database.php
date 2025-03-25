@@ -78,14 +78,64 @@ if ($contentType === "application/json") {
     }else if (isset($data['action']) && $data['action'] === 'createEmployee'){
         
         $role = $data['role'];
-        $firstname =   $data['firstName'];
+        $firstname =   $data['firstname'];
         $lastname =  $data['lastname'];
         $password =  $data['password'];
+        $status = "available";
+        $tasks = -1; 
 
-        mysqli_query($conn, "INSERT INTO users (password, firstname, lastname, role) VALUES
-        ('P@sswOrd!23', 'Anya', 'Volkov', 'admin')");
+
+        // mysqli_query($conn, "INSERT INTO purchase (managerUserID, plane, fuel, tire, motor) 
+        // VALUES ('" . getCurrentUser() . "', " . $plane . ", " . $fuel . ", " . $tire . ", " . $engine . ");");    
+
+        mysqli_query($conn, "INSERT INTO users (password, firstname, lastname, role, status, tasks) VALUES
+        ('". $password."',
+         '".$firstname."',
+         '".$lastname."',
+         '".$role."',
+         '". $status ."',
+         '". $tasks ."');");
+
         echo json_encode(['success' => true, 'message' => 'Employee Added']);      
-        
+
+
+    }else if (isset($data['action']) && $data['action'] === 'deleteEmployee'){
+
+        $userID = $data['userID'];
+        mysqli_query($conn, "DELETE FROM users  WHERE userID =" .  $userID);
+        echo json_encode(['success' => true, 'message' => 'Order rejected']);
+
+    }else if (isset($data['action']) && $data['action'] === 'createTasks'){
+
+        $stateCalculation = "N/A"; 
+
+        mysqli_query($conn, "INSERT INTO task (TargetPlane, Fuel, 
+        tire1, tire2, tire3, tire4, tire5, tire6, motor, state, taskStatus, 
+        staffUserID1, staffUserID2, staffUserID3, staffUserID4, staffUserID5, 
+        staffUserID6, staffUserID7, staffUserID8, comments, reporter ) VALUES
+        ('". $data['planeName'] ."',
+         '". $data['fuelNum'] ."',
+         '". $data['tire1'] ."',
+         '". $data['tire2'] ."',
+         '". $data['tire3'] ."',
+         '". $data['tire4'] ."',
+         '". $data['tire5'] ."',
+         '". $data['tire6'] ."',
+         '". $data['engine'] ."', 
+         '". $stateCalculation ."',
+         'On Hold',
+         '00',
+         '00',
+         '00',
+         '00',
+         '00',
+         '00',
+         '00',
+         '00',
+         '". $data['comments'] ."',         
+         '". getCurrentUser() ."');");
+
+         echo json_encode(['success' => true, 'message' => 'Order rejected']);
 
     }
 
