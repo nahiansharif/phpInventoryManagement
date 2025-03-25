@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3307
--- Generation Time: Mar 25, 2025 at 03:25 AM
+-- Host: 127.0.0.1
+-- Generation Time: Mar 25, 2025 at 01:52 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -122,24 +122,31 @@ CREATE TABLE `task` (
   `motor` enum('Good','Medicore','Bad') DEFAULT NULL,
   `state` enum('Good','Medicore','Bad') DEFAULT NULL,
   `taskStatus` enum('on hold','approved','Completed','rejected') DEFAULT NULL,
-  `staffUserID1` int(11) DEFAULT NULL,
-  `staffUserID2` int(11) DEFAULT NULL,
-  `staffUserID3` int(11) DEFAULT NULL,
-  `staffUserID4` int(11) DEFAULT NULL,
-  `staffUserID5` int(11) DEFAULT NULL,
-  `staffUserID6` int(11) DEFAULT NULL,
-  `staffUserID7` int(11) DEFAULT NULL,
-  `staffUserID8` int(11) DEFAULT NULL,
   `comments` varchar(255) NOT NULL,
-  `reporter` varchar(255) NOT NULL
+  `reporter` varchar(255) NOT NULL,
+  `neededWorkers` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `task`
 --
 
-INSERT INTO `task` (`TaskID`, `TargetPlane`, `Fuel`, `tire1`, `tire2`, `tire3`, `tire4`, `tire5`, `tire6`, `motor`, `state`, `taskStatus`, `staffUserID1`, `staffUserID2`, `staffUserID3`, `staffUserID4`, `staffUserID5`, `staffUserID6`, `staffUserID7`, `staffUserID8`, `comments`, `reporter`) VALUES
-(1, 'B012', 4011, 'Good', '', 'Good', 'Bad', 'Good', 'Good', 'Good', '', 'on hold', 0, 0, 0, 0, 0, 0, 0, 0, 'dsfdsfsddf', '40');
+INSERT INTO `task` (`TaskID`, `TargetPlane`, `Fuel`, `tire1`, `tire2`, `tire3`, `tire4`, `tire5`, `tire6`, `motor`, `state`, `taskStatus`, `comments`, `reporter`, `neededWorkers`) VALUES
+(1, 'B012', 4011, 'Good', 'Medicore', 'Good', 'Bad', 'Good', 'Good', 'Good', '', 'on hold', 'dsfdsfsddf', '40', 0),
+(7, 'B518', 50000, 'Medicore', 'Medicore', 'Medicore', 'Good', 'Medicore', 'Medicore', 'Medicore', '', 'on hold', 'Amnira', '35', 4),
+(8, 'B456', 10000, 'Good', 'Medicore', 'Medicore', 'Good', 'Good', 'Good', 'Bad', '', 'on hold', 'Halal', '40', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `taskstaff`
+--
+
+CREATE TABLE `taskstaff` (
+  `id` int(11) NOT NULL,
+  `TaskID` int(11) NOT NULL,
+  `staffUserID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -210,6 +217,13 @@ ALTER TABLE `task`
   ADD PRIMARY KEY (`TaskID`);
 
 --
+-- Indexes for table `taskstaff`
+--
+ALTER TABLE `taskstaff`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `TaskID` (`TaskID`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -229,7 +243,13 @@ ALTER TABLE `purchase`
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `TaskID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `TaskID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `taskstaff`
+--
+ALTER TABLE `taskstaff`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -246,6 +266,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `purchase`
   ADD CONSTRAINT `purchase_ibfk_1` FOREIGN KEY (`managerUserID`) REFERENCES `users` (`userID`);
+
+--
+-- Constraints for table `taskstaff`
+--
+ALTER TABLE `taskstaff`
+  ADD CONSTRAINT `taskstaff_ibfk_1` FOREIGN KEY (`TaskID`) REFERENCES `task` (`TaskID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
