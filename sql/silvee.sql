@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3307
--- Generation Time: Mar 25, 2025 at 10:00 PM
+-- Host: 127.0.0.1
+-- Generation Time: Mar 26, 2025 at 01:56 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -132,11 +132,12 @@ CREATE TABLE `task` (
 --
 
 INSERT INTO `task` (`TaskID`, `TargetPlane`, `Fuel`, `tire1`, `tire2`, `tire3`, `tire4`, `tire5`, `tire6`, `motor`, `state`, `taskStatus`, `comments`, `reporter`, `neededWorkers`) VALUES
-(1, 'B012', 4011, 'Good', 'Medicore', 'Good', 'Bad', 'Good', 'Good', 'Good', '', 'approved', 'dsfdsfsddf', '40', 2),
+(1, 'B012', 4011, 'Good', 'Medicore', 'Good', 'Bad', 'Good', 'Good', 'Good', '', 'Completed', 'dsfdsfsddf', '40', 2),
 (7, 'B518', 50000, 'Medicore', 'Medicore', 'Medicore', 'Good', 'Medicore', 'Medicore', 'Medicore', '', 'approved', 'Amnira', '35', 4),
-(8, 'B456', 10000, 'Good', 'Medicore', 'Medicore', 'Good', 'Good', 'Good', 'Bad', '', 'approved', 'Halal', '40', 2),
-(9, 'C924', 35000, 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Good', '', 'approved', 'Engine is good, but all tire needs replacement. ', '40', 4),
-(10, 'A456', 35000, 'Medicore', 'Bad', 'Bad', 'Medicore', 'Good', 'Medicore', 'Bad', '', 'on hold', 'Tires and engine needs some work', '40', 4);
+(8, 'B456', 10000, 'Good', 'Medicore', 'Medicore', 'Good', 'Good', 'Good', 'Bad', '', 'rejected', 'Halal', '40', 2),
+(9, 'C924', 35000, 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Good', '', 'rejected', 'Engine is good, but all tire needs replacement. ', '40', 4),
+(10, 'A456', 35000, 'Medicore', 'Bad', 'Bad', 'Medicore', 'Good', 'Medicore', 'Bad', '', 'on hold', 'Tires and engine needs some work', '40', 4),
+(11, 'C678', 50000, 'Medicore', 'Good', 'Good', 'Good', 'Good', 'Good', 'Medicore', '', 'rejected', 'Lets get this done bois', '40', 2);
 
 -- --------------------------------------------------------
 
@@ -254,7 +255,7 @@ ALTER TABLE `purchase`
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `TaskID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `TaskID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `taskstaff`
