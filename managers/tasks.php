@@ -63,10 +63,42 @@
         <div class="container">
 
         <div class="menu">
-            <button class="approveButton" value="1" >On Hold</button>
-            <button class="unselectedButton" value="2">Approved</button>
-            <button class="unselectedButton" value="3">Completed</button>
-            <button class="unselectedButton" value="4">Rejected</button>
+
+        <?php
+        include("../database.php"); 
+            if(getShowTaskBasedOnStatus() === "on hold") {
+                echo "<button class='approveButton' value='1'>On Hold</button>";
+                echo "<button class='unselectedButton' value='2'>Approved</button>";
+                echo "<button class='unselectedButton' value='3'>Completed</button>";
+                echo "<button class='unselectedButton' value='4'>Rejected</button>";
+            } else if(getShowTaskBasedOnStatus() === "approved") {
+                echo "<button class='unselectedButton' value='1'>On Hold</button>";
+                echo "<button class='approveButton' value='2'>Approved</button>";
+                echo "<button class='unselectedButton' value='3'>Completed</button>";
+                echo "<button class='unselectedButton' value='4'>Rejected</button>";
+            } else if(getShowTaskBasedOnStatus() === "completed") {
+                echo "<button class='unselectedButton' value='1'>On Hold</button>";
+                echo "<button class='unselectedButton' value='2'>Approved</button>";
+                echo "<button class='approveButton' value='3'>Completed</button>";
+                echo "<button class='unselectedButton' value='4'>Rejected</button>";
+            } else if(getShowTaskBasedOnStatus() === "rejected") {
+                echo "<button class='unselectedButton' value='1'>On Hold</button>";
+                echo "<button class='unselectedButton' value='2'>Approved</button>";
+                echo "<button class='unselectedButton' value='3'>Completed</button>";
+                echo "<button class='approveButton' value='4'>Rejected</button>";
+            }else{
+
+                echo "<button class='unselectedButton' value='1'>On Hold</button>";
+                echo "<button class='unselectedButton' value='2'>Approved</button>";
+                echo "<button class='approveButton' value='3'>Completed</button>";
+                echo "<button class='unselectedButton' value='4'>Rejected</button>";
+                
+
+            }
+        ?>
+
+
+            
         </div>
 
 
@@ -78,13 +110,30 @@
 
 
             <?php
-            include("../database.php"); 
+            
             while ($row = mysqli_fetch_assoc($tasks)){   
-                if($row['taskStatus'] === 'on hold'){
+                if($row['taskStatus'] === getShowTaskBasedOnStatus()){
+
+                    $height = 350; 
+
+
+                    if($row['neededWorkers'] == 2)
+                    {
+                        $height = 500; 
+                    } 
+                    else if($row['neededWorkers'] == 4)
+                    {
+                        $height = 900; 
+                    }
+                    else if($row['neededWorkers'] == 8)
+                    {
+                        $height = 1400; 
+                    }
+                    
                     
                 
                 
-                echo '<div class="card">';
+                echo '<div class="card"> <style> .card {  height: '. $height . 'px; }</style>';
                 echo '<div>';
 
                 $fullname = mysqli_query($conn, "SELECT firstname, lastname FROM users WHERE userID = " .$row['reporter'] ); 
@@ -107,6 +156,10 @@
                 
                 echo "<p><strong>Comments: </strong> " . $row['comments'] ."</p>"; 
 
+                if($row['taskStatus'] === "on hold"){
+
+                    
+
                 for($i = 1; $i <= $row['neededWorkers'] ; $i++){
 
                     // this is where we show the name of all available staff
@@ -126,12 +179,27 @@
 
                 echo "<button class='refuseButton refuseOrder'   value='". $row['TaskID'] ."'>Refuse</button>";
                 echo "<button class='approveButton approveOrder' value='". $row['TaskID'] ."'>Approve</button>"; 
+
+                } else {
+
+                    $names = mysqli_query($conn, "  SELECT u.firstname, u.lastname
+                                                    FROM taskStaff ts
+                                                    JOIN users u ON ts.staffUserID = u.userID
+                                                    WHERE ts.taskID = " . $row['TaskID']);
+                    echo "<p> Workers on this task is: </p>"; 
+                    while ($row4 = mysqli_fetch_assoc($names)){   
+                        echo "<p>". $row4['firstname'] . " " . $row4['lastname'] . "</p>";
+                    }
+                }
+
+
                     
 
                     echo '</div>';
                     echo '</div>';
                 }
                 } 
+                
             ?>
 
         
@@ -149,19 +217,53 @@
     
         buttons.forEach(button => {
             button.addEventListener("click", function() {
-                // Remove "approveButton" from all buttons
-                buttons.forEach(btn => {
-                btn.classList.remove("approveButton");
-                btn.classList.add("unselectedButton");
-                });
-        
-                // Add "approveButton" to the clicked button
-                this.classList.remove("unselectedButton");
-                this.classList.add("approveButton");
+                
+
+                const data = {
+                action: 'showTaskStatus', 
+                pageNum: this.value, 
+                };
+
+                console.log(data); 
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '../database.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        console.log('Data sent successfully from showTaskStatus:', xhr.responseText);
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if(response.success){
+                                console.log("Database updated");
+                                //Handle success response
+                            } else{
+                                console.error("Database error: ", response.error);
+                                //Handle error response.
+                            }
+
+                        }catch (e){
+                            console.error("Error parsing JSON: ", e);
+                        }
+
+                    } else {
+                        // Error! Handle the error.
+                        console.error('Error sending data:', xhr.status, xhr.statusText);
+                        // Handle error response.
+                    }
+                };
+                xhr.onerror = function(){
+                    console.error("Network error occured.")
+                }
+
+                xhr.send(JSON.stringify(data));  
+
+                location.reload(); 
 
 
-                const buttonValue = button.value;
-                console.log(`Button "${button.textContent}" clicked. Value: ${buttonValue}`);
+
+
             });
         });
     });
@@ -182,6 +284,7 @@
                 action: 'refuseTask', 
                 taskID: this.value, 
                 };
+                
 
                 
 

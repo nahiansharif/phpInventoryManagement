@@ -22,6 +22,20 @@ function getCurrentUser(){
     return $_SESSION['currentUser'];
 }
 
+
+if (!isset($_SESSION['ShowTaskBasedOnStatus'])) {
+    $_SESSION['ShowTaskBasedOnStatus'] = "on hold"; 
+}
+function setShowTaskBasedOnStatus($ShowTaskBasedOnStatus){
+    $_SESSION['ShowTaskBasedOnStatus'] = $ShowTaskBasedOnStatus;
+}
+function getShowTaskBasedOnStatus(){
+    return $_SESSION['ShowTaskBasedOnStatus'];
+}
+
+
+
+
 $employees = mysqli_query($conn, "SELECT * FROM users"); 
 $storeHouse = mysqli_query($conn, "SELECT * FROM storehouse"); 
 $planes = mysqli_query($conn, "SELECT * FROM plane"); 
@@ -127,6 +141,27 @@ if ($contentType === "application/json") {
          '". getCurrentUser() ."',
          '". $data['neededWorkers'] ."');");
 
+        mysqli_query($conn, "UPDATE plane 
+        SET fuel = " "
+        
+        (TargetPlane, Fuel, 
+        tire1, tire2, tire3, tire4, tire5, tire6, motor, state, taskStatus, 
+         comments, reporter, neededWorkers ) VALUES
+        ('". $data['planeName'] ."',
+         '". $data['fuelNum'] ."',
+         '". $data['tire1'] ."',
+         '". $data['tire2'] ."',
+         '". $data['tire3'] ."',
+         '". $data['tire4'] ."',
+         '". $data['tire5'] ."',
+         '". $data['tire6'] ."',
+         '". $data['engine'] ."', 
+         '". $stateCalculation ."',
+         'On Hold',
+         '". $data['comments'] ."',         
+         '". getCurrentUser() ."',
+         '". $data['neededWorkers'] ."');");
+
          echo json_encode(['success' => true, 'message' => 'Order rejected']);
 
     }else if (isset($data['action']) && $data['action'] === 'refuseTask'){
@@ -162,6 +197,26 @@ if ($contentType === "application/json") {
         
 
         echo json_encode(['success' => true, 'message' => 'Task Status updated to approved ']);
+
+    }else if (isset($data['action']) && $data['action'] === 'showTaskStatus'){
+        
+
+        switch ($data['pageNum']) {
+            case 1:
+                setShowTaskBasedOnStatus("on hold");
+                break;
+            case 2:
+                setShowTaskBasedOnStatus("approved");
+                break;
+            case 3:
+                setShowTaskBasedOnStatus("Completed");
+                break;
+            case 4:
+                setShowTaskBasedOnStatus("rejected");
+                break;
+            
+        }
+        echo json_encode(['success' => true, 'message' => ' page changes successfully ']);
 
     }
 
