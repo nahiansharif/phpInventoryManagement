@@ -83,19 +83,18 @@ if ($contentType === "application/json") {
         $lastname =  $data['lastname'];
         $password =  $data['password'];
         $status = "available";
-        $tasks = -1; 
+       
 
 
         // mysqli_query($conn, "INSERT INTO purchase (managerUserID, plane, fuel, tire, motor) 
         // VALUES ('" . getCurrentUser() . "', " . $plane . ", " . $fuel . ", " . $tire . ", " . $engine . ");");    
 
-        mysqli_query($conn, "INSERT INTO users (password, firstname, lastname, role, status, tasks) VALUES
+        mysqli_query($conn, "INSERT INTO users (password, firstname, lastname, role, status) VALUES
         ('". $password."',
          '".$firstname."',
          '".$lastname."',
          '".$role."',
-         '". $status ."',
-         '". $tasks ."');");
+         '". $status ."');");
 
         echo json_encode(['success' => true, 'message' => 'Employee Added']);      
 
@@ -129,6 +128,40 @@ if ($contentType === "application/json") {
          '". $data['neededWorkers'] ."');");
 
          echo json_encode(['success' => true, 'message' => 'Order rejected']);
+
+    }else if (isset($data['action']) && $data['action'] === 'refuseTask'){
+
+        mysqli_query($conn, "UPDATE task 
+            SET taskStatus = 'rejected'
+            WHERE taskID = " .$data['taskID']);
+
+        echo json_encode(['success' => true, 'message' => 'Task Status updated to refused ']);
+
+    }else if (isset($data['action']) && $data['action'] === 'approveTask'){
+
+        mysqli_query($conn, "UPDATE task 
+            SET taskStatus = 'approved'
+            WHERE taskID = " .$data['taskID']);
+
+        // insert task id and workers to the taskStaff table. 
+
+        foreach($data['workers'] as $worker){
+
+            mysqli_query($conn, "INSERT INTO taskstaff (TaskID, staffUserID) 
+            VALUES ('" . $data['taskID'] . "', " . $worker. ");");
+
+            // update staff status from available to busy 
+            mysqli_query($conn, "UPDATE users 
+            SET status = 'busy'
+            WHERE userID = " .$worker);
+
+
+
+        }
+
+        
+
+        echo json_encode(['success' => true, 'message' => 'Task Status updated to approved ']);
 
     }
 

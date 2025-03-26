@@ -140,6 +140,47 @@
                 
             });
 
+            <?php
+// ... (your PHP code to fetch data and generate HTML) ...
+
+for ($i = 1; $i <= $row['neededWorkers']; $i++) {
+    echo "<p>select worker #" . $i . "</p>";
+    echo "<select class='worker-select'>"; // Added class for easier selection
+
+    mysqli_data_seek($employees, 0);
+    while ($row3 = mysqli_fetch_assoc($employees)) {
+        if (($row3["role"] === 'staff') && $row3["status"] === 'available') {
+            echo "<option value='" . $row3["firstname"] . " " . $row3["lastname"] . "'>" . $row3["firstname"] . " " . $row3["lastname"] . "</option>"; // Added value attribute
+        }
+    }
+    echo "</select> <br><br>";
+}
+
+echo "<button class='refuseButton refuseOrder' value='" . $row['TaskID'] . "'>Refuse</button>";
+echo "<button class='approveButton approveOrder' value='" . $row['TaskID'] . "'>Approve</button>";
+?>
+
+<script>
+    document.querySelectorAll(".approveOrder").forEach(button => {
+        button.addEventListener("click", function() {
+            const data = {
+                action: 'approveTask',
+                taskID: this.value,
+                workers: {} // Initialize an object to store worker selections
+            };
+
+            // Get all worker selections
+            document.querySelectorAll('.worker-select').forEach((select, index) => {
+                data.workers[`worker${index + 1}`] = select.value;
+            });
+
+            console.log(data); // Log the data object to see the worker selections
+
+            // ... (your AJAX or fetch request to send the data) ...
+        });
+    });
+</script>
+
 
     </script>
         

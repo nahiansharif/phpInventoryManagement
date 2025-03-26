@@ -1,39 +1,4 @@
-<?php
 
-$approvals = [
-    [
-        'name' => 'Manager 365',
-        'amount' => 3,
-        'text' => 'engine',
-        'status' => null,
-    ],
-    [
-        'name' => 'Supervisor Alpha',
-        'amount' => 10,
-        'text' => 'project proposal',
-        'status' => false,
-    ],
-    [
-        'name' => 'Director Beta',
-        'amount' => 50,
-        'text' => 'budget request',
-        'status' => true,
-    ],
-    [
-        'name' => 'Team Lead Gamma',
-        'amount' => 1,
-        'text' => 'time off',
-        'status' => false,
-    ],
-    [
-        'name' => 'VP Delta',
-        'amount' => 100,
-        'text' => 'strategic plan',
-        'status' => null,
-    ],
-];
-
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -111,26 +76,13 @@ $approvals = [
 
 
 
-        
-            <div class="card">
-                
-                <div>
-                    <h1>"Full Name" reports: </h1> <!-- display name here -->
-                    <p> Plane <strong>A372</strong>'s <strong>Engine</strong> is <strong>dead</strong></p> <!-- display integer first, and then the tex inside of the strong tag only, "wants to buy" will remain there outside of strong tag always -->
-                    <p><strong>Comments: </strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat.</p>
-
-                    <button class="refuseButton">Refuse</button>
-                    <button class="approveButton">Approve</button>
-                </div>
-                
-                    
-                
-            </div>
 
             <?php
             include("../database.php"); 
             while ($row = mysqli_fetch_assoc($tasks)){   
+                if($row['taskStatus'] === 'on hold'){
+                    
+                
                 
                 echo '<div class="card">';
                 echo '<div>';
@@ -140,26 +92,31 @@ $approvals = [
                     echo "<h1> ". $row2["firstname"] . " " . $row2["lastname"] . "'s Task# " . $row['TaskID']. " report: </h1>";
                 }
 
-                $numOfBadTires = 3; 
+                // use for loop from 1 to 6
+                // check if tire[i] is medicore or bad
+                //if yes, increment
+                $numOfBadTires = 0;
+                
+                
                 echo "<p> Plane <strong>" . $row['TargetPlane'].
                 "</strong>'s engine is <strong>". $row['motor'] ."</strong>, 
                 Fuel Level is <strong>". $row['Fuel'] ."</strong>,
                 and have <strong>". $numOfBadTires ."</strong> problematic Tires. </p>"; 
 
-                echo "<p>Need <strong>  " . $row['neededWorkers'] ."</strong> workers to finish the task. </p>"; 
-
+                echo "<p>Need <strong> " . $row['neededWorkers'] ."</strong> workers to finish the task. </p>"; 
+                
                 echo "<p><strong>Comments: </strong> " . $row['comments'] ."</p>"; 
 
                 for($i = 1; $i <= $row['neededWorkers'] ; $i++){
 
                     // this is where we show the name of all available staff
                     echo "<p> select worker #". $i . "</p>"; 
-                    echo "<select id=worker".$i." >"; 
+                    echo "<select class='worker-select".$row['TaskID']."'>";
 
                     mysqli_data_seek($employees, 0);
                     while ($row3 = mysqli_fetch_assoc($employees)){   
                         if(($row3["role"] === 'staff') && $row3["status"] === 'available'){
-                            echo "<option> ". $row3["firstname"] ." " . $row3["lastname"] ." </option>"; 
+                            echo "<option value='" . $row3["userID"] . "'>" . $row3["firstname"] . " " . $row3["lastname"] . "</option>"; 
                         }
                     }
                     echo "</select> <br><br>"; 
@@ -167,16 +124,13 @@ $approvals = [
                 }
                 
 
-                echo "<button class='refuseButton refuseOrder'>Refuse</button>";
-                echo "<button class='approveButton approveOrder'>Approve</button>"; 
+                echo "<button class='refuseButton refuseOrder'   value='". $row['TaskID'] ."'>Refuse</button>";
+                echo "<button class='approveButton approveOrder' value='". $row['TaskID'] ."'>Approve</button>"; 
                     
-                    
-                    // echo '<h1>' . $approval['name'] . '</h1>';
-                    // echo '<p> wants to buy <strong>' . $approval['amount'] . ' ' . $approval['text'] . '</strong></p>';
-                    // echo '<button class="refuseButton">Refuse</button>';
-                    // echo '<button class="approveButton">Approve</button>';
+
                     echo '</div>';
                     echo '</div>';
+                }
                 } 
             ?>
 
@@ -222,8 +176,107 @@ $approvals = [
         document.querySelectorAll(".refuseOrder").forEach(button => {
             button.addEventListener("click", function() {
 
+                //change the order status to rejected
+
+                const data = {
+                action: 'refuseTask', 
+                taskID: this.value, 
+                };
+
                 
 
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '../database.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        console.log('Data sent successfully:', xhr.responseText);
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if(response.success){
+                                console.log("Database updated");
+                                //Handle success response
+                            } else{
+                                console.error("Database error: ", response.error);
+                                //Handle error response.
+                            }
+
+                        }catch (e){
+                            console.error("Error parsing JSON: ", e);
+                        }
+
+                    } else {
+                        // Error! Handle the error.
+                        console.error('Error sending data:', xhr.status, xhr.statusText);
+                        // Handle error response.
+                    }
+                };
+                xhr.onerror = function(){
+                    console.error("Network error occured.")
+                }
+
+                xhr.send(JSON.stringify(data));    
+
+                alert("Task " + this.value + " is refused"); 
+                location.reload(); 
+
+                
+
+            }); 
+        });
+
+        document.querySelectorAll(".approveOrder").forEach(button => {
+            button.addEventListener("click", function() {
+
+                const data = {
+                action: 'approveTask', 
+                taskID: this.value, 
+                workers: {},
+                };
+                
+                document.querySelectorAll('.worker-select-' + this.value).forEach((select, index) => {
+                    data.workers[`worker${index + 1}`] = select.value;
+                });
+
+                console.log(data)
+                
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '../database.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        console.log('Data sent successfully:', xhr.responseText);
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if(response.success){
+                                console.log("Database updated");
+                                //Handle success response
+                            } else{
+                                console.error("Database error: ", response.error);
+                                //Handle error response.
+                            }
+
+                        }catch (e){
+                            console.error("Error parsing JSON: ", e);
+                        }
+
+                    } else {
+                        // Error! Handle the error.
+                        console.error('Error sending data:', xhr.status, xhr.statusText);
+                        // Handle error response.
+                    }
+                };
+                xhr.onerror = function(){
+                    console.error("Network error occured.")
+                }
+
+                xhr.send(JSON.stringify(data));    
+
+                alert("Task " + this.value + " is approved"); 
+                location.reload(); 
 
             }); 
         });

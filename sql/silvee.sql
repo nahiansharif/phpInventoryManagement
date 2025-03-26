@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 25, 2025 at 01:52 PM
+-- Host: 127.0.0.1:3307
+-- Generation Time: Mar 25, 2025 at 10:00 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -132,9 +132,11 @@ CREATE TABLE `task` (
 --
 
 INSERT INTO `task` (`TaskID`, `TargetPlane`, `Fuel`, `tire1`, `tire2`, `tire3`, `tire4`, `tire5`, `tire6`, `motor`, `state`, `taskStatus`, `comments`, `reporter`, `neededWorkers`) VALUES
-(1, 'B012', 4011, 'Good', 'Medicore', 'Good', 'Bad', 'Good', 'Good', 'Good', '', 'on hold', 'dsfdsfsddf', '40', 0),
-(7, 'B518', 50000, 'Medicore', 'Medicore', 'Medicore', 'Good', 'Medicore', 'Medicore', 'Medicore', '', 'on hold', 'Amnira', '35', 4),
-(8, 'B456', 10000, 'Good', 'Medicore', 'Medicore', 'Good', 'Good', 'Good', 'Bad', '', 'on hold', 'Halal', '40', 2);
+(1, 'B012', 4011, 'Good', 'Medicore', 'Good', 'Bad', 'Good', 'Good', 'Good', '', 'approved', 'dsfdsfsddf', '40', 2),
+(7, 'B518', 50000, 'Medicore', 'Medicore', 'Medicore', 'Good', 'Medicore', 'Medicore', 'Medicore', '', 'approved', 'Amnira', '35', 4),
+(8, 'B456', 10000, 'Good', 'Medicore', 'Medicore', 'Good', 'Good', 'Good', 'Bad', '', 'approved', 'Halal', '40', 2),
+(9, 'C924', 35000, 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Good', '', 'approved', 'Engine is good, but all tire needs replacement. ', '40', 4),
+(10, 'A456', 35000, 'Medicore', 'Bad', 'Bad', 'Medicore', 'Good', 'Medicore', 'Bad', '', 'on hold', 'Tires and engine needs some work', '40', 4);
 
 -- --------------------------------------------------------
 
@@ -148,6 +150,16 @@ CREATE TABLE `taskstaff` (
   `staffUserID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `taskstaff`
+--
+
+INSERT INTO `taskstaff` (`id`, `TaskID`, `staffUserID`) VALUES
+(1, 7, 45),
+(2, 7, 44),
+(3, 7, 43),
+(4, 7, 42);
+
 -- --------------------------------------------------------
 
 --
@@ -160,38 +172,37 @@ CREATE TABLE `users` (
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `role` enum('admin','manager','staff') NOT NULL,
-  `status` enum('available','busy') DEFAULT 'available',
-  `tasks` int(11) DEFAULT -1
+  `status` enum('available','busy') DEFAULT 'available'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`userID`, `password`, `firstname`, `lastname`, `role`, `status`, `tasks`) VALUES
-(23, 'P@sswOrd!23', 'Anya', 'Volkov', 'admin', 'available', -1),
-(24, 'asd', 'Jax', 'Rider', 'admin', 'available', -1),
-(25, 'Man@ger_42', 'Zara', 'Knight', 'manager', 'available', -1),
-(26, 'Str0ngP@ss', 'Finn', 'Sterling', 'manager', 'available', -1),
-(27, 'loli', 'Luna', 'Vance', 'manager', 'available', -1),
-(28, 'M@nag3R_77', 'Kai', 'Frost', 'manager', 'available', -1),
-(29, 'P@$$wOrd99', 'Nova', 'Reed', 'manager', 'available', -1),
-(30, 'St@ff_1', 'Rory', 'Shaw', 'staff', 'available', -1),
-(31, 'P@$$WOrd2', 'Sage', 'Ward', 'staff', 'available', -1),
-(32, 'Secur3_Pass', 'Leo', 'West', 'staff', 'available', -1),
-(33, 'PassWOrd_4', 'Ivy', 'Lane', 'staff', 'available', -1),
-(34, 'Str0ng_5', 'Milo', 'Bell', 'staff', 'available', -1),
-(35, 'C0mpl3x6', 'Hazel', 'Page', 'staff', 'available', -1),
-(36, 'P@ss7WOrd', 'Owen', 'Cole', 'staff', 'available', -1),
-(37, 'S3cur3P@ss', 'Willow', 'Hill', 'staff', 'available', -1),
-(38, 'P@$$wOrd9', 'Asher', 'King', 'staff', 'available', -1),
-(39, 'Str0ng10', 'Scarlett', 'Dale', 'staff', 'available', -1),
-(40, 'qwe', 'Jasper', 'Rose', 'staff', 'available', -1),
-(41, 'P@$$WOrd12', 'Violet', 'Lake', 'staff', 'available', -1),
-(42, 'S3cur3P@ss13', 'Silas', 'River', 'staff', 'available', -1),
-(43, 'P@$$wOrd14', 'Coral', 'Stone', 'staff', 'available', -1),
-(44, 'Str0ng15', 'Zephyr', 'Meadow', 'staff', 'available', -1),
-(45, 'asli123', 'kob', 'alis', 'staff', 'available', -1);
+INSERT INTO `users` (`userID`, `password`, `firstname`, `lastname`, `role`, `status`) VALUES
+(23, 'P@sswOrd!23', 'Anya', 'Volkov', 'admin', 'available'),
+(24, 'asd', 'Jax', 'Rider', 'admin', 'available'),
+(25, 'Man@ger_42', 'Zara', 'Knight', 'manager', 'available'),
+(26, 'Str0ngP@ss', 'Finn', 'Sterling', 'manager', 'available'),
+(27, 'loli', 'Luna', 'Vance', 'manager', 'available'),
+(28, 'M@nag3R_77', 'Kai', 'Frost', 'manager', 'available'),
+(29, 'P@$$wOrd99', 'Nova', 'Reed', 'manager', 'available'),
+(30, 'St@ff_1', 'Rory', 'Shaw', 'staff', 'available'),
+(31, 'P@$$WOrd2', 'Sage', 'Ward', 'staff', 'available'),
+(32, 'Secur3_Pass', 'Leo', 'West', 'staff', 'available'),
+(33, 'PassWOrd_4', 'Ivy', 'Lane', 'staff', 'available'),
+(34, 'Str0ng_5', 'Milo', 'Bell', 'staff', 'available'),
+(35, 'C0mpl3x6', 'Hazel', 'Page', 'staff', 'available'),
+(36, 'P@ss7WOrd', 'Owen', 'Cole', 'staff', 'available'),
+(37, 'S3cur3P@ss', 'Willow', 'Hill', 'staff', 'available'),
+(38, 'P@$$wOrd9', 'Asher', 'King', 'staff', 'available'),
+(39, 'Str0ng10', 'Scarlett', 'Dale', 'staff', 'available'),
+(40, 'qwe', 'Jasper', 'Rose', 'staff', 'available'),
+(41, 'P@$$WOrd12', 'Violet', 'Lake', 'staff', 'available'),
+(42, 'S3cur3P@ss13', 'Silas', 'River', 'staff', 'busy'),
+(43, 'P@$$wOrd14', 'Coral', 'Stone', 'staff', 'busy'),
+(44, 'Str0ng15', 'Zephyr', 'Meadow', 'staff', 'busy'),
+(45, 'asli123', 'kob', 'alis', 'staff', 'busy');
 
 --
 -- Indexes for dumped tables
@@ -243,13 +254,13 @@ ALTER TABLE `purchase`
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `TaskID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `TaskID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `taskstaff`
 --
 ALTER TABLE `taskstaff`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
