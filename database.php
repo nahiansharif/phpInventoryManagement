@@ -142,25 +142,19 @@ if ($contentType === "application/json") {
          '". $data['neededWorkers'] ."');");
 
         mysqli_query($conn, "UPDATE plane 
-        SET fuel = " "
+        SET fuel = ". $data['fuelNum'] .",
+        tire1 = '". $data['tire1'] ."',
+        tire2 = '". $data['tire2'] ."',
+        tire3 = '". $data['tire3'] ."',
+        tire4 = '". $data['tire4'] ."',
+        tire5 = '". $data['tire5'] ."',
+        tire6 = '". $data['tire6'] ."',
+        motor = '". $data['engine'] ."'
+        WHERE nameID = '". $data['planeName'] ."';"
         
-        (TargetPlane, Fuel, 
-        tire1, tire2, tire3, tire4, tire5, tire6, motor, state, taskStatus, 
-         comments, reporter, neededWorkers ) VALUES
-        ('". $data['planeName'] ."',
-         '". $data['fuelNum'] ."',
-         '". $data['tire1'] ."',
-         '". $data['tire2'] ."',
-         '". $data['tire3'] ."',
-         '". $data['tire4'] ."',
-         '". $data['tire5'] ."',
-         '". $data['tire6'] ."',
-         '". $data['engine'] ."', 
-         '". $stateCalculation ."',
-         'On Hold',
-         '". $data['comments'] ."',         
-         '". getCurrentUser() ."',
-         '". $data['neededWorkers'] ."');");
+        ); 
+        
+        
 
          echo json_encode(['success' => true, 'message' => 'Order rejected']);
 

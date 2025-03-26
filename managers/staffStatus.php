@@ -47,20 +47,7 @@
         </div>
 
         <div class="container">
-            <div class="card">
-                <img src="../employee.png" alt="Plane Image" class="planePic">
-                    <div>
-                        <div class="row">
-                        <h1>Kash Naplique</h1> <p>is <strong>busy</strong></p>
-                        </div>
-                        
-                        <p>
-                            <strong>Title</strong>: Manager  &nbsp &nbsp
-                            <strong>ID#</strong>: 401253  &nbsp &nbsp
-                        </p>
-                        <p>Working on Task 36547</p>
-                    </div>
-            </div>
+            
 
             
             <?php
@@ -78,11 +65,7 @@
                         echo '<h1>' . $row["firstname"], " ", $row["lastname"] . '</h1> <p>is <strong>' . $row["status"] . '</strong></p>'; 
                         echo '</div> <br>';
                         echo '<p> <strong>Title</strong>: '. $row["role"]  .'&nbsp &nbsp <strong>ID#</strong>: '. $row["userID"] .'&nbsp &nbsp </p>'; 
-                        if($row["status"] === "busy"){
-
-                            echo '<p>Working on Task# ' . $row["tasks"] .' </p>'; 
-
-                        }
+                        
                         echo "</div></div>";
                     }
 

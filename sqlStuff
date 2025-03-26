@@ -103,3 +103,9 @@ INSERT INTO users (password, firstname, lastname, role) VALUES
 INSERT INTO storehouse (plane, fuel, tire,motor)VALUES
 (15, 900000, 60, 35)
     -- 1 plane = 70k fuel in gallons, 6 tires, 4 engines
+
+mysqli_query($conn, "UPDATE storehouse 
+            SET plane = plane + " . $row['plane'] . ", 
+                fuel = fuel + " . $row['fuel'] . ", 
+                tire = tire + " . $row['tire'] . ", 
+                motor = motor + " . $row['motor']);

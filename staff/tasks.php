@@ -22,16 +22,49 @@
 include '../infoBar.php';
 ?>
         <div class="infoBar">
-            <p>
-                <strong>Task on plane A302: </strong> fix 
-                <strong>3 tires </strong> and   
-                <strong> Refill fuel </strong> and fix
-                <strong>Engine </strong> 
-            </p>
+            
+
+            <?php
+            include_once '../database.php';
+
+            $task = mysqli_query($conn, "SELECT taskID FROM taskstaff WHERE staffUserID =" . getCurrentUser()); 
+
+            
+            while ($row = mysqli_fetch_assoc($task)){ 
+
+            $details = mysqli_query($conn, "SELECT TargetPlane, Fuel, motor, tire1, tire2, tire3, tire4, tire5, tire6 FROM task WHERE taskID =" . $row['taskID']);    
+
+            $
+            while ($row2 = mysqli_fetch_assoc($details)){ 
+
+                echo "<p>Plane <strong class=''>".$row2['TargetPlane']." </strong> needs <strong  class=''>".$row2['motor']." </strong>  engine, <strong  class=''>".$row2['tire1']." </strong>  tires, <strong  class=''>". 70000 - $row2['Fuel']." </strong>  gallons of fuel </p>"; 
+
+            }
+            
+
+
+
+            }
+
+            
+
+
+
+
+            ?>
+
+            
+
+
+
+
+
+                
+        
             
         </div>
-        <div class="container">
-        <button class="approveButton"> complete the Task </button>
+        <div class="container">      
+              <button class="approveButton"> complete the Task </button>
         </div>
         
 
