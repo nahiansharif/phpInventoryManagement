@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 26, 2025 at 01:56 PM
+-- Generation Time: Mar 27, 2025 at 02:00 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,7 +29,6 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `plane` (
   `NameID` varchar(255) NOT NULL,
-  `state` enum('Good','Medicore','Bad') DEFAULT NULL,
   `fuel` int(11) DEFAULT NULL,
   `tire1` enum('Good','Medicore','Bad') DEFAULT NULL,
   `motor` enum('Good','Medicore','Bad') DEFAULT NULL,
@@ -44,22 +43,22 @@ CREATE TABLE `plane` (
 -- Dumping data for table `plane`
 --
 
-INSERT INTO `plane` (`NameID`, `state`, `fuel`, `tire1`, `motor`, `tire2`, `tire3`, `tire4`, `tire5`, `tire6`) VALUES
-('A123', 'Bad', 8000, 'Bad', 'Bad', 'Good', 'Bad', 'Bad', 'Bad', 'Bad'),
-('A302', 'Good', 60000, 'Good', 'Good', 'Good', 'Good', 'Good', 'Good', 'Good'),
-('A456', 'Good', 70000, 'Good', 'Good', 'Good', 'Good', 'Good', 'Good', 'Good'),
-('A789', 'Medicore', 25000, 'Medicore', 'Good', 'Bad', 'Good', 'Good', 'Good', 'Good'),
-('A901', 'Good', 68000, 'Good', 'Good', 'Good', 'Good', 'Good', 'Good', 'Good'),
-('B012', 'Bad', 7000, 'Good', 'Bad', 'Bad', 'Bad', 'Bad', 'Bad', 'Bad'),
-('B234', 'Bad', 5000, 'Bad', 'Medicore', 'Bad', 'Bad', 'Bad', 'Bad', 'Bad'),
-('B456', 'Good', 40000, 'Good', 'Medicore', 'Good', 'Good', 'Good', 'Good', 'Good'),
-('B518', 'Good', 35000, 'Good', 'Good', 'Medicore', 'Good', 'Good', 'Good', 'Good'),
-('B789', 'Good', 55000, 'Good', 'Good', 'Good', 'Good', 'Good', 'Good', 'Good'),
-('C345', 'Good', 32000, 'Medicore', 'Good', 'Good', 'Good', 'Good', 'Medicore', 'Good'),
-('C567', 'Good', 30000, 'Good', 'Good', 'Medicore', 'Good', 'Good', 'Good', 'Good'),
-('C678', 'Bad', 15000, 'Bad', 'Bad', 'Medicore', 'Medicore', 'Bad', 'Bad', 'Bad'),
-('C890', 'Good', 65000, 'Good', 'Good', 'Good', 'Good', 'Good', 'Good', 'Good'),
-('C924', 'Bad', 10000, 'Bad', 'Bad', 'Bad', 'Bad', 'Bad', 'Bad', 'Bad');
+INSERT INTO `plane` (`NameID`, `fuel`, `tire1`, `motor`, `tire2`, `tire3`, `tire4`, `tire5`, `tire6`) VALUES
+('A123', 8000, 'Bad', 'Bad', 'Good', 'Bad', 'Bad', 'Bad', 'Bad'),
+('A302', 60000, 'Good', 'Good', 'Good', 'Good', 'Good', 'Good', 'Good'),
+('A456', 70000, 'Good', 'Good', 'Good', 'Good', 'Good', 'Good', 'Good'),
+('A789', 25000, 'Medicore', 'Good', 'Bad', 'Good', 'Good', 'Good', 'Good'),
+('A901', 68000, 'Good', 'Good', 'Good', 'Good', 'Good', 'Good', 'Good'),
+('B012', 7000, 'Good', 'Bad', 'Bad', 'Bad', 'Bad', 'Bad', 'Bad'),
+('B234', 5000, 'Bad', 'Medicore', 'Bad', 'Bad', 'Bad', 'Bad', 'Bad'),
+('B456', 40000, 'Good', 'Medicore', 'Good', 'Good', 'Good', 'Good', 'Good'),
+('B518', 70000, 'Good', 'Good', 'Good', 'Good', 'Good', 'Good', 'Good'),
+('B789', 55000, 'Good', 'Good', 'Good', 'Good', 'Good', 'Good', 'Good'),
+('C345', 32000, 'Medicore', 'Good', 'Good', 'Good', 'Good', 'Medicore', 'Good'),
+('C567', 30000, 'Good', 'Good', 'Medicore', 'Good', 'Good', 'Good', 'Good'),
+('C678', 20000, 'Good', 'Good', 'Good', 'Good', 'Good', 'Bad', 'Bad'),
+('C890', 65000, 'Good', 'Good', 'Good', 'Good', 'Good', 'Good', 'Good'),
+('C924', 10000, 'Bad', 'Bad', 'Bad', 'Bad', 'Bad', 'Bad', 'Bad');
 
 -- --------------------------------------------------------
 
@@ -81,7 +80,8 @@ CREATE TABLE `purchase` (
 --
 
 INSERT INTO `purchase` (`purchaseID`, `managerUserID`, `plane`, `fuel`, `tire`, `motor`) VALUES
-(29, 27, 8, 1000, 5, 2);
+(29, 27, 8, 1000, 5, 2),
+(30, 45, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -101,7 +101,7 @@ CREATE TABLE `storehouse` (
 --
 
 INSERT INTO `storehouse` (`plane`, `fuel`, `tire`, `motor`) VALUES
-(67, 921600, 256, 90);
+(67, 806600, 247, 88);
 
 -- --------------------------------------------------------
 
@@ -120,7 +120,6 @@ CREATE TABLE `task` (
   `tire5` enum('Good','Medicore','Bad') DEFAULT NULL,
   `tire6` enum('Good','Medicore','Bad') DEFAULT NULL,
   `motor` enum('Good','Medicore','Bad') DEFAULT NULL,
-  `state` enum('Good','Medicore','Bad') DEFAULT NULL,
   `taskStatus` enum('on hold','approved','Completed','rejected') DEFAULT NULL,
   `comments` varchar(255) NOT NULL,
   `reporter` varchar(255) NOT NULL,
@@ -131,13 +130,15 @@ CREATE TABLE `task` (
 -- Dumping data for table `task`
 --
 
-INSERT INTO `task` (`TaskID`, `TargetPlane`, `Fuel`, `tire1`, `tire2`, `tire3`, `tire4`, `tire5`, `tire6`, `motor`, `state`, `taskStatus`, `comments`, `reporter`, `neededWorkers`) VALUES
-(1, 'B012', 4011, 'Good', 'Medicore', 'Good', 'Bad', 'Good', 'Good', 'Good', '', 'Completed', 'dsfdsfsddf', '40', 2),
-(7, 'B518', 50000, 'Medicore', 'Medicore', 'Medicore', 'Good', 'Medicore', 'Medicore', 'Medicore', '', 'approved', 'Amnira', '35', 4),
-(8, 'B456', 10000, 'Good', 'Medicore', 'Medicore', 'Good', 'Good', 'Good', 'Bad', '', 'rejected', 'Halal', '40', 2),
-(9, 'C924', 35000, 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Good', '', 'rejected', 'Engine is good, but all tire needs replacement. ', '40', 4),
-(10, 'A456', 35000, 'Medicore', 'Bad', 'Bad', 'Medicore', 'Good', 'Medicore', 'Bad', '', 'on hold', 'Tires and engine needs some work', '40', 4),
-(11, 'C678', 50000, 'Medicore', 'Good', 'Good', 'Good', 'Good', 'Good', 'Medicore', '', 'rejected', 'Lets get this done bois', '40', 2);
+INSERT INTO `task` (`TaskID`, `TargetPlane`, `Fuel`, `tire1`, `tire2`, `tire3`, `tire4`, `tire5`, `tire6`, `motor`, `taskStatus`, `comments`, `reporter`, `neededWorkers`) VALUES
+(1, 'B012', 4011, 'Good', 'Medicore', 'Good', 'Bad', 'Good', 'Good', 'Good', 'Completed', 'dsfdsfsddf', '40', 2),
+(7, 'B518', 50000, 'Medicore', 'Medicore', 'Medicore', 'Good', 'Medicore', 'Medicore', 'Medicore', 'Completed', 'Amnira', '35', 4),
+(8, 'B456', 10000, 'Good', 'Medicore', 'Medicore', 'Good', 'Good', 'Good', 'Bad', 'rejected', 'Halal', '40', 2),
+(9, 'C924', 35000, 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Medicore', 'Good', 'rejected', 'Engine is good, but all tire needs replacement. ', '40', 4),
+(10, 'A456', 35000, 'Medicore', 'Bad', 'Bad', 'Medicore', 'Good', 'Medicore', 'Bad', 'on hold', 'Tires and engine needs some work', '40', 4),
+(11, 'C678', 50000, 'Medicore', 'Good', 'Good', 'Good', 'Good', 'Good', 'Medicore', 'rejected', 'Lets get this done bois', '40', 2),
+(12, 'C678', 20000, 'Good', 'Good', 'Good', 'Good', 'Bad', 'Bad', 'Good', 'Completed', '2 Tire needs some work', '45', 2),
+(13, 'B518', 25000, 'Good', 'Good', 'Bad', 'Bad', 'Good', 'Bad', 'Bad', 'Completed', 'I am proud of this result.', '39', 4);
 
 -- --------------------------------------------------------
 
@@ -159,7 +160,13 @@ INSERT INTO `taskstaff` (`id`, `TaskID`, `staffUserID`) VALUES
 (1, 7, 45),
 (2, 7, 44),
 (3, 7, 43),
-(4, 7, 42);
+(4, 7, 42),
+(6, 12, 37),
+(7, 12, 39),
+(8, 13, 32),
+(9, 13, 38),
+(10, 13, 36),
+(11, 13, 35);
 
 -- --------------------------------------------------------
 
@@ -190,14 +197,14 @@ INSERT INTO `users` (`userID`, `password`, `firstname`, `lastname`, `role`, `sta
 (29, 'P@$$wOrd99', 'Nova', 'Reed', 'manager', 'available'),
 (30, 'St@ff_1', 'Rory', 'Shaw', 'staff', 'available'),
 (31, 'P@$$WOrd2', 'Sage', 'Ward', 'staff', 'available'),
-(32, 'Secur3_Pass', 'Leo', 'West', 'staff', 'available'),
+(32, 'Secur3_Pass', 'Leo', 'West', 'staff', 'busy'),
 (33, 'PassWOrd_4', 'Ivy', 'Lane', 'staff', 'available'),
 (34, 'Str0ng_5', 'Milo', 'Bell', 'staff', 'available'),
-(35, 'C0mpl3x6', 'Hazel', 'Page', 'staff', 'available'),
-(36, 'P@ss7WOrd', 'Owen', 'Cole', 'staff', 'available'),
-(37, 'S3cur3P@ss', 'Willow', 'Hill', 'staff', 'available'),
-(38, 'P@$$wOrd9', 'Asher', 'King', 'staff', 'available'),
-(39, 'Str0ng10', 'Scarlett', 'Dale', 'staff', 'available'),
+(35, 'C0mpl3x6', 'Hazel', 'Page', 'staff', 'busy'),
+(36, 'P@ss7WOrd', 'Owen', 'Cole', 'staff', 'busy'),
+(37, 'S3cur3P@ss', 'Willow', 'Hill', 'staff', 'busy'),
+(38, 'P@$$wOrd9', 'Asher', 'King', 'staff', 'busy'),
+(39, 'Str0ng10', 'Scarlett', 'Dale', 'staff', 'busy'),
 (40, 'qwe', 'Jasper', 'Rose', 'staff', 'available'),
 (41, 'P@$$WOrd12', 'Violet', 'Lake', 'staff', 'available'),
 (42, 'S3cur3P@ss13', 'Silas', 'River', 'staff', 'busy'),
@@ -249,19 +256,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `purchase`
 --
 ALTER TABLE `purchase`
-  MODIFY `purchaseID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `purchaseID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `TaskID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `TaskID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `taskstaff`
 --
 ALTER TABLE `taskstaff`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `users`
