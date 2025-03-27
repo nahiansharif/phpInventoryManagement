@@ -114,26 +114,27 @@
             while ($row = mysqli_fetch_assoc($tasks)){   
                 if($row['taskStatus'] === getShowTaskBasedOnStatus()){
 
-                    $height = 350; 
+                    
+                    $height = 350;
 
+                    if ($row['neededWorkers'] == 2) {
+                        $height = 700;
+                    } elseif ($row['neededWorkers'] == 4) {
+                        $height = 900;
+                    } elseif ($row['neededWorkers'] == 8) {
+                        $height = 1400;
+                    }
+            
+                    // Apply the height as an inline style
+                    echo '<div class="card" style="height: ' . $height . 'px;">';
 
-                    if($row['neededWorkers'] == 2)
-                    {
-                        $height = 500; 
-                    } 
-                    else if($row['neededWorkers'] == 4)
-                    {
-                        $height = 900; 
-                    }
-                    else if($row['neededWorkers'] == 8)
-                    {
-                        $height = 1400; 
-                    }
+                    
+
                     
                     
                 
                 
-                echo '<div class="card"> <style> .card {  height: '. $height . 'px; }</style>';
+                
                 echo '<div>';
 
                 $fullname = mysqli_query($conn, "SELECT firstname, lastname FROM users WHERE userID = " .$row['reporter'] ); 
@@ -158,27 +159,27 @@
 
                 if($row['taskStatus'] === "on hold"){
 
+                    //kulimuttta
+
+                    for($i = 1; $i <= $row['neededWorkers'] ; $i++){
+
+                        // this is where we show the name of all available staff
+                        echo "<p> select worker #". $i . "</p>"; 
+                        echo "<select class='worker-select-".$row['TaskID']."'>";
                     
-
-                for($i = 1; $i <= $row['neededWorkers'] ; $i++){
-
-                    // this is where we show the name of all available staff
-                    echo "<p> select worker #". $i . "</p>"; 
-                    echo "<select class='worker-select".$row['TaskID']."'>";
-
-                    mysqli_data_seek($employees, 0);
-                    while ($row3 = mysqli_fetch_assoc($employees)){   
-                        if(($row3["role"] === 'staff') && $row3["status"] === 'available'){
-                            echo "<option value='" . $row3["userID"] . "'>" . $row3["firstname"] . " " . $row3["lastname"] . "</option>"; 
+                        mysqli_data_seek($employees, 0);
+                        while ($row3 = mysqli_fetch_assoc($employees)){   
+                            if(($row3["role"] === 'staff') && $row3["status"] === 'available'){
+                                echo "<option value='" . $row3["userID"] . "'>" . $row3["firstname"] . " " . $row3["lastname"] . "</option>"; 
+                            }
                         }
+                        echo "</select> <br><br>"; 
+                    
                     }
-                    echo "</select> <br><br>"; 
-
-                }
                 
 
                 echo "<button class='refuseButton refuseOrder'   value='". $row['TaskID'] ."'>Refuse</button>";
-                echo "<button class='approveButton approveOrder' value='". $row['TaskID'] ."'>Approve</button>"; 
+                echo "<button class='approveButton approveOrder' numOfWorkers='".$row['neededWorkers']."' value='". $row['TaskID'] ."'>Approve</button>"; 
 
                 } else {
 
@@ -310,9 +311,9 @@
                         }
 
                     } else {
-                        // Error! Handle the error.
+                        
                         console.error('Error sending data:', xhr.status, xhr.statusText);
-                        // Handle error response.
+                        
                     }
                 };
                 xhr.onerror = function(){
@@ -330,17 +331,26 @@
         });
 
         document.querySelectorAll(".approveOrder").forEach(button => {
-            button.addEventListener("click", function() {
+            button.addEventListener("click", function(event) {
+
+                const numOfWorkers = event.target.getAttribute("numOfWorkers");
 
                 const data = {
                 action: 'approveTask', 
                 taskID: this.value, 
-                workers: {},
+                workers: [],
                 };
                 
-                document.querySelectorAll('.worker-select-' + this.value).forEach((select, index) => {
-                    data.workers[`worker${index + 1}`] = select.value;
+                
+                //kulimuttta
+
+                document.querySelectorAll('.worker-select-' + this.value).forEach((select) => {
+                    console.log("does this even exists?"); 
+                    console.log(select.value); 
+                    data.workers.push(select.value); // Push values into the array
                 });
+
+                
 
                 console.log(data)
                 

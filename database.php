@@ -121,10 +121,10 @@ if ($contentType === "application/json") {
 
     }else if (isset($data['action']) && $data['action'] === 'createTasks'){
 
-        $stateCalculation = "N/A"; 
+         
 
         mysqli_query($conn, "INSERT INTO task (TargetPlane, Fuel, 
-        tire1, tire2, tire3, tire4, tire5, tire6, motor, state, taskStatus, 
+        tire1, tire2, tire3, tire4, tire5, tire6, motor,  taskStatus, 
          comments, reporter, neededWorkers ) VALUES
         ('". $data['planeName'] ."',
          '". $data['fuelNum'] ."',
@@ -135,7 +135,6 @@ if ($contentType === "application/json") {
          '". $data['tire5'] ."',
          '". $data['tire6'] ."',
          '". $data['engine'] ."', 
-         '". $stateCalculation ."',
          'On Hold',
          '". $data['comments'] ."',         
          '". getCurrentUser() ."',
@@ -177,18 +176,15 @@ if ($contentType === "application/json") {
         foreach($data['workers'] as $worker){
 
             mysqli_query($conn, "INSERT INTO taskstaff (TaskID, staffUserID) 
-            VALUES ('" . $data['taskID'] . "', " . $worker. ");");
+            VALUES (" . $data['taskID'] . ", " . $worker. ");");
+
 
             // update staff status from available to busy 
             mysqli_query($conn, "UPDATE users 
             SET status = 'busy'
             WHERE userID = " .$worker);
 
-
-
         }
-
-        
 
         echo json_encode(['success' => true, 'message' => 'Task Status updated to approved ']);
 
@@ -211,6 +207,39 @@ if ($contentType === "application/json") {
             
         }
         echo json_encode(['success' => true, 'message' => ' page changes successfully ']);
+
+    }else if (isset($data['action']) && $data['action'] === 'staffCompletesTask'){
+
+        //update task status to completed
+        mysqli_query($conn, "UPDATE task  
+            SET taskStatus = 'Completed'
+            WHERE taskID = " .$data['taskID']);
+
+        // update storage, and subtract the items from the table based on values
+
+        mysqli_query($conn, "UPDATE storehouse  
+            SET fuel = fuel - " . $data['fuels'] . ", 
+                tire = tire - " . $data['tires'] . ", 
+                motor = motor - " . $data['engine']);
+
+
+
+        // update the target plane and make the consition good. 
+
+        mysqli_query($conn, "UPDATE plane 
+            SET fuel = 70000, 
+                tire1 = 'Good',
+                tire2 = 'Good', 
+                tire3 = 'Good', 
+                tire4 = 'Good', 
+                tire5 = 'Good', 
+                tire6 = 'Good',  
+                motor = 'Good'
+                WHERE NameID = '". $data['planeName'] ."'"); 
+
+    echo json_encode(['success' => true, 'message' => ' Staff finished the task successfully ']);
+
+
 
     }
 

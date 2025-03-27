@@ -39,7 +39,7 @@
                 echo '<img src="../plane.png" alt="Plane Image" class="planePic">';
                 echo '<div>';
                 echo '<h1>' . $row['NameID'] . '</h1>';
-                echo '<p><strong>Condition</strong>: ' . $row["state"] . ' &nbsp &nbsp<strong>Fuel</strong>: ' . $row["fuel"] . ' &nbsp &nbsp<strong>Engine</strong>: ' . $row["motor"] . '</p>';
+                echo '<p><strong>Fuel</strong>: ' . $row["fuel"] . ' &nbsp &nbsp<strong>Engine</strong>: ' . $row["motor"] . '</p>';
                 echo '<p> <strong>Tire 1</strong>: ' . $row["tire1"] .  '&nbsp &nbsp<strong>Tire 2</strong>: ' . $row["tire2"] . '&nbsp &nbsp<strong>Tire 3</strong>: ' . $row["tire3"] . '</p>';
                 echo '<p> <strong>Tire 4</strong>: ' . $row["tire4"] .  '&nbsp &nbsp<strong>Tire 5</strong>: ' . $row["tire5"] . '&nbsp &nbsp<strong>Tire 6</strong>: ' . $row["tire6"] . '</p>';
                 echo '</div>'; 
