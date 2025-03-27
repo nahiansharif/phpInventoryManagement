@@ -237,6 +237,21 @@ if ($contentType === "application/json") {
                 motor = 'Good'
                 WHERE NameID = '". $data['planeName'] ."'"); 
 
+//change status of all staff to available when the task is finished
+$sql1 = mysqli_query($conn, 
+"SELECT staffUserID
+    FROM taskstaff
+    WHERE taskID = ". $data['taskID']); 
+
+while ($row = mysqli_fetch_assoc($sql1)){ 
+    echo "<h1>". $row['staffUserID'] ."</h1>"; 
+
+    mysqli_query($conn, "UPDATE users 
+            SET status = 'available'
+                WHERE userID = ". $row['staffUserID']); 
+
+    }
+
     echo json_encode(['success' => true, 'message' => ' Staff finished the task successfully ']);
 
 

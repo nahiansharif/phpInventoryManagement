@@ -1,3 +1,39 @@
+<?php
+
+include("../database.php"); 
+
+$staffAvialability = mysqli_query($conn, 
+    "SELECT status, 
+    COUNT(*) AS staffCount
+    FROM `users` 
+    WHERE role='staff'
+    GROUP BY status; 
+    "); 
+
+    $staffNum = []; 
+
+while ($row = mysqli_fetch_assoc($staffAvialability)){ 
+array_push($staffNum, $row['staffCount']); 
+}
+
+$taskAvialability = mysqli_query($conn, 
+    "SELECT taskStatus, 
+    COUNT(*) AS taskCount
+    FROM `task` 
+    GROUP BY taskStatus; 
+    "); 
+
+    $taskNum = []; 
+
+while ($row = mysqli_fetch_assoc($taskAvialability)){ 
+array_push($taskNum, $row['taskCount']); 
+}
+
+
+
+
+?> 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,41 +91,37 @@
             <div class="column">
                 <div class="card">
                     <p>Task on hold</p>
-                    <p>250</p>
+                    <p> <?php echo $taskNum[0] ?> </p>
                 </div>
 
                 <div class="card">
                     <p>Task Approved</p>
-                    <p>250</p>
+                    <p> <?php echo $taskNum[1] ?> </p>
                 </div>
             </div>
             <div class="column">
                 <div class="card">
                     <p>Staff Working</p>
-                    <p>250</p>
+                    <p><?php echo $staffNum[1]; ?></p>
                 </div>
 
                 <div class="card">
                     <p>Staff Available</p>
-                    <p>250</p>
+                    <p><?php echo $staffNum[0]; ?></p>
                 </div>
             </div>
             <div class="column">
                 <div class="card">
                     <p>Task Rejected</p>
-                    <p>250</p>
+                    <p> <?php echo $taskNum[3] ?> </p>
                 </div>
 
                 <div class="card">
                     <p>Task Completed</p>
-                    <p>250</p>
+                    <p> <?php echo $taskNum[2] ?> </p>
                 </div>
             </div>
             
-
-
-
-
         </div>
     </div>
 

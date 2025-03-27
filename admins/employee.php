@@ -80,7 +80,7 @@ $employeeNums = mysqli_fetch_assoc($managersANDstaff);
                     echo '<p>';
                     echo '<strong>Title</strong>: ' .$row["role"].  '  &nbsp &nbsp';
                     echo '<strong>ID#</strong>: ' .$row["userID"].  '  &nbsp &nbsp';
-                    echo '<strong>Password#</strong>: ' .$row["password"].  '  &nbsp &nbsp';
+                    echo '<strong>Password</strong>: ' .$row["password"].  '  &nbsp &nbsp';
                     echo '</p>';
                     echo '<button class="refuseButton employeeRemoveButton" value="'.$row['userID'].'">Delete</button>';
                     echo '</div>';

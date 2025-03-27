@@ -1,46 +1,43 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
 
-for($i = 1; $i <= $row['neededWorkers'] ; $i++){
+<?php 
+include("database.php"); 
 
-    // this is where we show the name of all available staff
-    echo "<p> select worker #". $i . "</p>"; 
-    echo "<select class='worker-select-".$row['TaskID']."'>";
+$id = 19; 
 
-    mysqli_data_seek($employees, 0);
-    while ($row3 = mysqli_fetch_assoc($employees)){   
-        if(($row3["role"] === 'staff') && $row3["status"] === 'available'){
-            echo "<option value='" . $row3["userID"] . "'>" . $row3["firstname"] . " " . $row3["lastname"] . "</option>"; 
-        }
+$sql1 = mysqli_query($conn, 
+"SELECT staffUserID
+    FROM taskstaff
+    WHERE taskID = ". $id); 
+
+while ($row = mysqli_fetch_assoc($sql1)){ 
+    echo "<h1>". $row['staffUserID'] ."</h1>"; 
+
+    mysqli_query($conn, "UPDATE users 
+            SET status = 'available'
+                WHERE userID = ". $row['staffUserID']); 
+
     }
-    echo "</select> <br><br>"; 
 
-}
+
+
+
+
+
+
 
 ?>
 
-<script>
-
-document.querySelectorAll(".approveOrder").forEach(button => {
-            button.addEventListener("click", function() {
-
-                const data = {
-                action: 'approveTask', 
-                taskID: this.value, 
-                workers: [],
-                };
-            
-
-                document.querySelectorAll('.worker-select-' + this.value).forEach((select) => {
-                    console.log("does this even exists?"); 
-                    console.log(select.value); 
-                    data.workers.push(select.value); // Push values into the array
-                });
-
-                console.log(data)
-
-            }); 
-        });
 
 
-
-</script>
+ 
+    
+</body>
+</html>

@@ -37,9 +37,6 @@ include '../infoBar.php';
                         $tires = 0; 
                         $engines = 0; 
 
-                    
-
-
                         while ($row2 = mysqli_fetch_assoc($details)){ 
 
                             if($row2['taskStatus'] == 'approved'){
@@ -177,7 +174,7 @@ const button = document.querySelector('.completedTask');
 
                 xhr.send(JSON.stringify(data));
                 alert("Task Completed");
-                // location.reload(); 
+                location.reload(); 
 
   });
 

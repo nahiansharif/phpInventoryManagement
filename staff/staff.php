@@ -1,3 +1,54 @@
+<?php 
+
+include("../database.php"); 
+
+$task = mysqli_query($conn, "SELECT taskID FROM taskstaff WHERE staffUserID =" . getCurrentUser()); 
+$taskAvailable = "Not Available"; 
+$taskCompleted = 0; 
+$reports = 0; 
+            
+while ($row = mysqli_fetch_assoc($task)){ 
+    
+        $details = mysqli_query($conn, "SELECT taskStatus  FROM task WHERE taskID =" . $row['taskID']);    
+
+
+        while ($row2 = mysqli_fetch_assoc($details)){ 
+
+            if($row2['taskStatus'] == 'approved'){
+
+                $taskAvailable = "Available"; 
+
+            }
+
+            else if($row2['taskStatus'] == 'completed'){
+
+                $taskCompleted++; 
+
+            }
+
+        }
+
+    }
+
+    $reporter = mysqli_query($conn, 
+    "SELECT COUNT(*) AS rowCount
+        FROM task 
+        WHERE reporter = ". getCurrentUser() ."
+    "); 
+
+    while ($row = mysqli_fetch_assoc($reporter)){ 
+
+        $reports = $row['rowCount']; 
+
+    }
+
+
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,17 +102,17 @@
 
             <div class="card">
                 <p>Task</p>
-                <p>Not Available</p>
+                <p><?php echo $taskAvailable; ?></p>
             </div>
 
             <div class="card">
                 <p>Task Completed</p>
-                <p>53</p>
+                <p><?php echo $taskCompleted; ?></p>
             </div>
 
             <div class="card">
                 <p>Report Submitted</p>
-                <p>30</p>
+                <p><?php echo $reports; ?></p>
             </div>
 
 
