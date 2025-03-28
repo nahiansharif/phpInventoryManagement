@@ -1,6 +1,19 @@
 <div class="pieChart">
     <p>All Planes' Condition:</p>
-    <img src="../python/pieChart.png" alt="">
-    <p>62.5% Good <br><br> 35.5% Need Maintainance <br><br> 2% Critical</p>
+    <?php
+    $pythonScript = __DIR__ . '/generatePieChart.py';
+    $output = shell_exec('python ' .$pythonScript);
+
+    $results = explode("|", $output);
+
+    echo "<img src='../python/pieChart.png' alt='pie chart image generated' class='pieImage' >"; 
+
+    foreach($results as $result){
+        echo "<p>". $result . "</p>"; 
+    }
+
+    ?>
+    
+    
 </div>
 

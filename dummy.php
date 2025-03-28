@@ -12,7 +12,12 @@
 $pythonScript = __DIR__ . '/python/generatePieChart.py';
 $output = shell_exec('python ' .$pythonScript);
 
-echo $output;
+$results = explode("|", $output);
+
+foreach($results as $result){
+    echo "<p>" . $result . " </p> <br>"; 
+}
+
 ?>
 
     
