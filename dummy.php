@@ -3,41 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>python x php</title>
 </head>
 <body>
+    <h1> python x php</h1>
 
-<?php 
-include("database.php"); 
+<?php
+$pythonScript = __DIR__ . '/python/generatePieChart.py';
+$output = shell_exec('python ' .$pythonScript);
 
-$id = 19; 
-
-$sql1 = mysqli_query($conn, 
-"SELECT staffUserID
-    FROM taskstaff
-    WHERE taskID = ". $id); 
-
-while ($row = mysqli_fetch_assoc($sql1)){ 
-    echo "<h1>". $row['staffUserID'] ."</h1>"; 
-
-    mysqli_query($conn, "UPDATE users 
-            SET status = 'available'
-                WHERE userID = ". $row['staffUserID']); 
-
-    }
-
-
-
-
-
-
-
-
+echo $output;
 ?>
 
-
-
- 
     
 </body>
 </html>

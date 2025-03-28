@@ -3,6 +3,7 @@
 include("../database.php"); 
 
 $task = mysqli_query($conn, "SELECT taskID FROM taskstaff WHERE staffUserID =" . getCurrentUser()); 
+$completion = mysqli_query($conn, "SELECT completion FROM `users` WHERE userID =" . getCurrentUser()); 
 $taskAvailable = "Not Available"; 
 $taskCompleted = 0; 
 $reports = 0; 
@@ -20,11 +21,7 @@ while ($row = mysqli_fetch_assoc($task)){
 
             }
 
-            else if($row2['taskStatus'] == 'completed'){
-
-                $taskCompleted++; 
-
-            }
+            
 
         }
 
@@ -41,6 +38,13 @@ while ($row = mysqli_fetch_assoc($task)){
         $reports = $row['rowCount']; 
 
     }
+
+    while ($row = mysqli_fetch_assoc($completion)){ 
+        $taskCompleted = $row['completion'];
+
+    }
+
+
 
 
 
@@ -94,11 +98,12 @@ while ($row = mysqli_fetch_assoc($task)){
     <div class="main-content">
         <div class="container">
 
-            <div class="pieChart">
-                <p>All Planes' Condition:</p>
-                <img src="../pieChart.png" alt="">
-                <p>62.5% Good <br><br> 35.5% Need Maintainance <br><br> 2% Critical</p>
-            </div>
+        <?php 
+
+        include '../python/pie.php'
+
+        ?> 
+
 
             <div class="card">
                 <p>Task</p>

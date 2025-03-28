@@ -247,14 +247,91 @@ while ($row = mysqli_fetch_assoc($sql1)){
     echo "<h1>". $row['staffUserID'] ."</h1>"; 
 
     mysqli_query($conn, "UPDATE users 
-            SET status = 'available'
+            SET status = 'available',
+            completion = completion + 1
                 WHERE userID = ". $row['staffUserID']); 
 
     }
 
     echo json_encode(['success' => true, 'message' => ' Staff finished the task successfully ']);
+    }else if (isset($data['action']) && $data['action'] === 'liveSearchPlane'){
 
+        $name = $data['name']; 
 
+        $query = mysqli_query($conn, "SELECT * FROM plane WHERE NameID LIKE '$name%'"); 
+        $data = '';
+
+        $data = '';
+
+        while ($row = mysqli_fetch_assoc($query)) {  
+            $data .= '<div class="card">';
+            $data .= '<img src="../plane.png" alt="Plane Image" class="planePic">';
+            $data .= '<div>';
+            $data .= '<h1>' . $row['NameID'] . '</h1>';
+            $data .= '<p><strong>Fuel</strong>: ' . $row["fuel"] . ' &nbsp &nbsp<strong>Engine</strong>: ' . $row["motor"] . '</p>';
+            $data .= '<p> <strong>Tire 1</strong>: ' . $row["tire1"] . '&nbsp &nbsp<strong>Tire 2</strong>: ' . $row["tire2"] . '&nbsp &nbsp<strong>Tire 3</strong>: ' . $row["tire3"] . '</p>';
+            $data .= '<p> <strong>Tire 4</strong>: ' . $row["tire4"] . '&nbsp &nbsp<strong>Tire 5</strong>: ' . $row["tire5"] . '&nbsp &nbsp<strong>Tire 6</strong>: ' . $row["tire6"] . '</p>';
+            $data .= '</div>'; 
+            $data .= '</div>'; 
+        }
+
+        
+        echo json_encode(['success' => true, 'data' => $data, 'message' => 'Live Search for plane is working']);
+        
+    
+
+    }else if (isset($data['action']) && $data['action'] === 'liveSearchAdminEmployee'){
+
+        $id = $data['id']; 
+
+        $query = mysqli_query($conn, "SELECT * FROM users WHERE (firstname LIKE '$id%' OR lastname LIKE '$id%') AND role != 'admin';"); 
+        $data = '';
+
+        $data = '';
+
+        while ($row = mysqli_fetch_assoc($query)) {  
+            $data .= '<div class="card">';
+            $data .= '<img src="../employee.png" alt="Plane Image" class="planePic">'; 
+            $data .= '<div>';
+            $data .= '<h1>' . $row["firstname"]. " ". $row["lastname"] . '</h1>';
+            $data .= '<p>';
+            $data .= '<strong>Title</strong>: ' .$row["role"].  '  &nbsp &nbsp';
+            $data .= '<strong>ID#</strong>: ' .$row["userID"].  '  &nbsp &nbsp';
+            $data .= '<strong>Password</strong>: ' .$row["password"].  '  &nbsp &nbsp';
+            $data .= '</p>';
+            $data .= '<button class="refuseButton employeeRemoveButton" value="'.$row['userID'].'">Delete</button>';
+            $data .= '</div>';
+            $data .= '</div>';
+        }
+
+        
+        echo json_encode(['success' => true, 'data' => $data, 'message' => 'Live Search for employee by admin is working']);
+        
+    
+
+    }if (isset($data['action']) && $data['action'] === 'liveSearchManagerStaff'){
+
+        $id = $data['id']; 
+
+        $query = mysqli_query($conn, "SELECT * FROM users WHERE (firstname LIKE '$id%' OR lastname LIKE '$id%') AND role = 'staff';"); 
+        $data = '';
+
+        $data = '';
+
+        while ($row = mysqli_fetch_assoc($query)) {  
+            $data .= '<div class="card">';
+            $data .= '<img src="../employee.png" alt="Plane Image" class="planePic"> <div>'; 
+            $data .=  '<div class="row">'; 
+            $data .= '<h1>' . $row["firstname"]. " ". $row["lastname"] . '</h1> <p>is <strong>' . $row["status"] . '</strong></p>'; 
+            $data .= '</div> <br>';
+            $data .= '<p> <strong>Title</strong>: '. $row["role"]  .'&nbsp &nbsp <strong>ID#</strong>: '. $row["userID"] .'&nbsp &nbsp </p>'; 
+            $data .= "</div></div>";
+        }
+
+        
+        echo json_encode(['success' => true, 'data' => $data, 'message' => 'Live Search for staff by manager is working']);
+        
+    
 
     }
 

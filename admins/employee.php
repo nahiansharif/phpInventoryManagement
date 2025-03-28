@@ -52,21 +52,12 @@ $employeeNums = mysqli_fetch_assoc($managersANDstaff);
 
         <br>
         <div class="search-bar">
-            <input type="text" placeholder="Search Employees" id="search-bar" list="search-suggestions" name="searchedTeacherName">
-                <datalist id="search-suggestions">
-                <!-- this is where I show all the plane names -->
-                    <option value="478319">
-                    <option value="478482">
-                    <option value="478325">
-
-                    <?php
-              
-                    ?>
-                </datalist>
+            <input type="text" placeholder="Search Employees" id="search_employee_bar">
+                
 
         </div>
 
-        <div class="container">
+        <div class="container" id="show_searched_employees">
 
 
             <?php
@@ -76,7 +67,7 @@ $employeeNums = mysqli_fetch_assoc($managersANDstaff);
                     echo '<div class="card">';
                     echo '<img src="../employee.png" alt="Plane Image" class="planePic">'; 
                     echo '<div>';
-                    echo '<h1>' . $row["firstname"], " ", $row["lastname"] . '</h1>';
+                    echo '<h1>' . $row["firstname"]. " ". $row["lastname"] . '</h1>';
                     echo '<p>';
                     echo '<strong>Title</strong>: ' .$row["role"].  '  &nbsp &nbsp';
                     echo '<strong>ID#</strong>: ' .$row["userID"].  '  &nbsp &nbsp';
@@ -88,9 +79,6 @@ $employeeNums = mysqli_fetch_assoc($managersANDstaff);
                 }
 
             }
-                
-                   
-            
                 
             ?>
 
@@ -107,17 +95,79 @@ $employeeNums = mysqli_fetch_assoc($managersANDstaff);
 
 <script>
         const removeButton = document.querySelector('.employeeRemoveButton');
-        
-        document.querySelectorAll(".employeeRemoveButton").forEach(button => {
-            button.addEventListener("click", function() {
 
-            // ajax 
+        document.getElementById('show_searched_employees').addEventListener('click', function(e) {
+            if (e.target.classList.contains('employeeRemoveButton')) {
+        // Retrieve the userID from the button's value attribute
+        const userID = e.target.value;
+            document.querySelectorAll(".employeeRemoveButton").forEach(button => {
+                button.addEventListener("click", function() {
+
+                // ajax 
+                const data = {
+                action: 'deleteEmployee', 
+                userID: userID, 
+                };
+
+                
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '../database.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                    xhr.onload = function() {
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            console.log('Data sent successfully:', xhr.responseText);
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                if(response.success){
+                                    console.log("Database updated Employee Deleted");
+                                    alert("Employee Deleted"); 
+                                    location.reload(); 
+                                } else{
+                                    console.error("Database error: ", response.error);
+                                    //Handle error response.
+                                }
+
+                            }catch (e){
+                                console.error("Error parsing JSON: ", e);
+                            }
+
+                        } else {
+                            // Error! Handle the error.
+                            console.error('Error sending data:', xhr.status, xhr.statusText);
+                            // Handle error response.
+                        }
+                    };
+                    xhr.onerror = function(){
+                        console.error("Network error occured.")
+                    }
+
+                    xhr.send(JSON.stringify(data));    
+
+                    
+
+                }); 
+
+            }); 
+        }
+        }); 
+
+
+        //////////////////////////////////////////////////////////////////////////////
+
+        const employeeSearchBar = document.getElementById('search_employee_bar');
+
+        let searchValue = '';
+        // show_searched_employees
+
+        employeeSearchBar.addEventListener('input', () => {
+            searchValue = employeeSearchBar.value;
+            
             const data = {
-            action: 'deleteEmployee', 
-            userID: this.value, 
+            action: 'liveSearchAdminEmployee', 
+            id: searchValue,
             };
 
-            
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '../database.php', true);
             xhr.setRequestHeader('Content-Type', 'application/json');
@@ -128,8 +178,9 @@ $employeeNums = mysqli_fetch_assoc($managersANDstaff);
                         try {
                             const response = JSON.parse(xhr.responseText);
                             if(response.success){
-                                console.log("Database updated");
-                                //Handle success response
+                                console.log("Live Search is working");
+                                // Update the search results container with the server's response data
+                                document.getElementById('show_searched_employees').innerHTML = response.data;
                             } else{
                                 console.error("Database error: ", response.error);
                                 //Handle error response.
@@ -149,13 +200,7 @@ $employeeNums = mysqli_fetch_assoc($managersANDstaff);
                     console.error("Network error occured.")
                 }
 
-                xhr.send(JSON.stringify(data));    
-
-                alert("New Employee Added"); 
-                location.reload(); 
-
-            }); 
-
+                xhr.send(JSON.stringify(data));
         }); 
 </script>
 

@@ -20,15 +20,15 @@
     <div class="main-content">
 
 
-        <div class="search-bar">
+        <div class="search-bar" >
         
-            <input type="text" placeholder="Search Planes" id="search-bar" >
+            <input type="text" placeholder="Search Planes" id="plane_search_bar" >
            
             
    
         </div>
 
-        <div class="container">  
+        <div class="container" id="showcase_Searched_planes">  
             
 
             <?php
@@ -63,5 +63,59 @@
     
    
     <script type="text/javascript" src="../front.js"></script>
+
+    <script>
+        
+        const planeSearchBar = document.getElementById('plane_search_bar');
+
+        let searchValue = '';
+
+        planeSearchBar.addEventListener('input', () => {
+            searchValue = planeSearchBar.value; // Update the variable
+            
+            const data = {
+            action: 'liveSearchPlane', 
+            name: searchValue,
+            };
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '../database.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        console.log('Data sent successfully:', xhr.responseText);
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if(response.success){
+                                console.log("Live Search is working");
+                                // Update the search results container with the server's response data
+                                document.getElementById('showcase_Searched_planes').innerHTML = response.data;
+                            } else{
+                                console.error("Database error: ", response.error);
+                                //Handle error response.
+                            }
+
+                        }catch (e){
+                            console.error("Error parsing JSON: ", e);
+                        }
+
+                    } else {
+                        // Error! Handle the error.
+                        console.error('Error sending data:', xhr.status, xhr.statusText);
+                        // Handle error response.
+                    }
+                };
+                xhr.onerror = function(){
+                    console.error("Network error occured.")
+                }
+
+                xhr.send(JSON.stringify(data));   
+            
+
+
+        });
+
+    </script>
 </body>
 </html>
