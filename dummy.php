@@ -20,6 +20,18 @@
 
 ?>
 
+<?php
+// $pythonScript = __DIR__ . '/python/generatePieChart.py';
+// $output = shell_exec('python ' .$pythonScript);
+
+// $results = explode("|", $output);
+
+// foreach($results as $result){
+//     echo "<p>" . $result . " </p> <br>"; 
+// }
+
+?>
+
 <div class="pieChart">
     <p>All Planes' Condition:</p>
     <img src="../python/pieChart.png" alt="Aircraft Conxfghnnditions Pie Chart">

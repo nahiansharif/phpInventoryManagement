@@ -208,53 +208,26 @@ if ($contentType === "application/json") {
         }
         echo json_encode(['success' => true, 'message' => ' page changes successfully ']);
 
-    }else if (isset($data['action']) && $data['action'] === 'staffCompletesTask'){
+    }else if (isset($data['action']) && $data['action'] === 'staffCompletesTask') {
 
-        //update task status to completed
-        mysqli_query($conn, "UPDATE task  
-            SET taskStatus = 'Completed'
-            WHERE taskID = " .$data['taskID']);
-
-        // update storage, and subtract the items from the table based on values
-
-        mysqli_query($conn, "UPDATE storehouse  
-            SET fuel = fuel - " . $data['fuels'] . ", 
-                tire = tire - " . $data['tires'] . ", 
-                motor = motor - " . $data['engine']);
-
-
-
-        // update the target plane and make the consition good. 
-
-        mysqli_query($conn, "UPDATE plane 
-            SET fuel = 70000, 
-                tire1 = 'Good',
-                tire2 = 'Good', 
-                tire3 = 'Good', 
-                tire4 = 'Good', 
-                tire5 = 'Good', 
-                tire6 = 'Good',  
-                motor = 'Good'
-                WHERE NameID = '". $data['planeName'] ."'"); 
-
-//change status of all staff to available when the task is finished
-$sql1 = mysqli_query($conn, 
-"SELECT staffUserID
-    FROM taskstaff
-    WHERE taskID = ". $data['taskID']); 
-
-while ($row = mysqli_fetch_assoc($sql1)){ 
-    echo "<h1>". $row['staffUserID'] ."</h1>"; 
-
-    mysqli_query($conn, "UPDATE users 
-            SET status = 'available',
-            completion = completion + 1
-                WHERE userID = ". $row['staffUserID']); 
-
+        mysqli_begin_transaction($conn);
+    
+        mysqli_query($conn, "UPDATE task SET taskStatus = 'Completed' WHERE taskID = " . $data['taskID']);
+    
+        mysqli_query($conn, "UPDATE storehouse SET fuel = fuel - " . $data['fuels'] . ", tire = tire - " . $data['tires'] . ", motor = motor - " . $data['engine']);
+    
+        mysqli_query($conn, "UPDATE plane SET fuel = 70000, tire1 = 'Good', tire2 = 'Good', tire3 = 'Good', tire4 = 'Good', tire5 = 'Good', tire6 = 'Good', motor = 'Good' WHERE NameID = '" . $data['planeName'] . "'");
+    
+        $sql1 = mysqli_query($conn, "SELECT staffUserID FROM taskstaff WHERE taskID = " . $data['taskID']);
+    
+        while ($row = mysqli_fetch_assoc($sql1)) {
+            mysqli_query($conn, "UPDATE users SET status = 'available', completion = completion + 1 WHERE userID = " . $row['staffUserID']);
+        }
+    
+        mysqli_commit($conn);
+        echo json_encode(['success' => true, 'message' => 'Staff finished the task successfully']);
     }
-
-    echo json_encode(['success' => true, 'message' => ' Staff finished the task successfully ']);
-    }else if (isset($data['action']) && $data['action'] === 'liveSearchPlane'){
+    else if (isset($data['action']) && $data['action'] === 'liveSearchPlane'){
 
         $name = $data['name']; 
 

@@ -135,20 +135,14 @@ body {
     padding: 10px;
 }
 
-.pieImage{
-    width: 300px; 
-    height: 300px;
-}
-
 /* pie chart */
 .pieChart{
-    width: 400px; 
-    height: 600px; 
+    width: 600px; 
+    height: 1000px; 
     display: grid;    
 }
 .pieChart p{  
-    padding: 15px;
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 
 .card img {            

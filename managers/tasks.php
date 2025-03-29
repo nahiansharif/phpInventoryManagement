@@ -146,6 +146,13 @@
                 // check if tire[i] is medicore or bad
                 //if yes, increment
                 $numOfBadTires = 0;
+
+                for($i = 1; $i <= 6; $i++){
+                    if($row['tire'.$i.''] != 'Good'){
+                        $numOfBadTires++; 
+                    }
+
+                }
                 
                 
                 echo "<p> Plane <strong>" . $row['TargetPlane'].

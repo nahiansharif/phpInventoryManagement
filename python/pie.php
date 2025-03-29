@@ -1,19 +1,19 @@
 <div class="pieChart">
-    <p>All Planes' Condition:</p>
+    <p>Planes' Condition:</p>
     <?php
+    
+    $pythonScript = __DIR__ . '/generate_piechart.py';
+    $output = shell_exec('python ' . $pythonScript . ' 2>&1');
+    $results = explode("|", $output); 
+    
+    
+    echo "<img src='../python/pieChart2.png?v=" . time() . "' alt='pie chart image generated' class='pieImage' width='600px' height = '700px'>";
 
     
-$output = shell_exec('python generate_chart.py');
-echo '<img src="data:image/png;base64,'.$output.'">';
-
-    // echo "<img src='../python/pieChart.png' alt='pie chart image generated' class='pieImage' >"; 
-
-    // $pythonScript = __DIR__ . '/generatePieChart.py';
-    // $output = shell_exec('python ' .$pythonScript);
-    //$results = explode("|", $output)
-    // foreach($results as $result){
-    //     echo "<p>". $result . "</p>"; 
-    // }
+        echo "<div class='row'><p>" . $results[0] . "% </p> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <p>" . $results[1] . "% </p> </div> "; 
+        echo "<div class='row'><p>" . $results[2] . "% </p> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <p>" . $results[3] . "% </p> </div> "; 
+        echo "<div class='row'><p>" . $results[4] . "% </p> </div>"; 
+    
 
     ?>
     

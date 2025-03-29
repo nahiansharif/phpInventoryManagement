@@ -1,8 +1,8 @@
 #!/usr/bin/python -u
-import mysql.connector
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
-import base64
-from io import BytesIO
+import mysql.connector
 
 
 myDB = mysql.connector.connect(
@@ -68,25 +68,21 @@ def roundNum(num):
 displayData = f"Good Planes: {roundNum(goodPlanes)}|Low Fuel: {roundNum(lowFuel)}|Bad Engine: {roundNum(badEngine)}|Bad Tires: {roundNum(badTire)}|More Problems: {roundNum(goodPlanes)}"
 
 
-labels = ['Good', 'Low Fuel', 'Bad Engine', 'Bad Tire', '2 or more problems']
-data  = [goodPlanes, lowFuel, badEngine, badTire, moreProblems]
-colors = ['#4CAF50', '#FFC107', '#FF5722', '#F44336', '#ff0000']
+def generatePieChart(labels, sizes, colors, title="Plane Conditions", filename="C:/xampp/htdocs/plane_inventory_management/phpInventoryManagement/python/pieChart2.png"): 
+    
+    plt.figure(figsize=(8, 8))
+    plt.pie(sizes, labels = labels, colors=colors, autopct='%1.1f%%', startangle=140)
+    plt.title(title)
+    plt.axis('equal')
+    plt.savefig(filename)
+    plt.close()
 
-# Generate plot
-plt.figure(figsize=(8,6))
-plt.pie(data, labels=labels, autopct='%1.1f%%')
-plt.title('Plane Conditions')
 
-# Save to buffer
-buffer = BytesIO()
-plt.savefig(buffer, format='png')
-plt.close()
-
-# Return base64
-print(base64.b64encode(buffer.getvalue()).decode('utf-8'))
-
-# print(displayData)
-
+chart_labels = ['Good Planes', 'Low Fuel', 'Bad Engine', 'Bad Tire', '2 or more problems']
+chart_sizes = [goodPlanes, lowFuel, badEngine, badTire, moreProblems]
+colors = ['#4CAF50', '#FFC107', '#FF5722', '#F44336', '#ce0f01']
+print(displayData)
+generatePieChart(chart_labels, chart_sizes, colors)
 myDB.close()
     
 
