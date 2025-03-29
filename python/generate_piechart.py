@@ -1,6 +1,8 @@
+#!/usr/bin/python -u
 import mysql.connector
 import matplotlib.pyplot as plt
-
+import base64
+from io import BytesIO
 
 
 myDB = mysql.connector.connect(
@@ -8,7 +10,7 @@ myDB = mysql.connector.connect(
         user="root",
         password="",
         database="Silvee",
-        port=3307
+        port=3306
 
     )
 
@@ -61,25 +63,30 @@ for row in data:
     goodTireNum = 0
 
 def roundNum(num):
-    return round(num, 2)
+    return round(num/totalNumOfPlanes, 3)*100
 
-roundNum(goodPlanes/totalNumOfPlanes)
-print(f"Good Planes: {roundNum(goodPlanes/totalNumOfPlanes)}|Low Fuel: {roundNum(lowFuel/totalNumOfPlanes)}|Bad Engine: {roundNum(badEngine/totalNumOfPlanes)}|Bad Tires: {roundNum(badTire/totalNumOfPlanes)}|More Problems: {roundNum(goodPlanes/totalNumOfPlanes)}")
-
-def generatePieChart(labels, sizes, title="Plane Conditions", filename="pieChart.png"): 
-    
-    plt.figure(figsize=(8, 8))
-    plt.pie(sizes, labels = labels, autopct='%1.1f%%', startangle=140)
-    plt.title(title)
-    plt.axis('equal')
-    plt.savefig(filename)
-    plt.close()
+displayData = f"Good Planes: {roundNum(goodPlanes)}|Low Fuel: {roundNum(lowFuel)}|Bad Engine: {roundNum(badEngine)}|Bad Tires: {roundNum(badTire)}|More Problems: {roundNum(goodPlanes)}"
 
 
-chart_labels = ['Good Planes', 'Low Fuel', 'Bad Engine', 'Bad Tire', '2 or more problems']
-chart_sizes = [goodPlanes, lowFuel, badEngine, badTire, moreProblems]
+labels = ['Good', 'Low Fuel', 'Bad Engine', 'Bad Tire', '2 or more problems']
+data  = [goodPlanes, lowFuel, badEngine, badTire, moreProblems]
+colors = ['#4CAF50', '#FFC107', '#FF5722', '#F44336', '#ff0000']
 
-generatePieChart(chart_labels, chart_sizes)
+# Generate plot
+plt.figure(figsize=(8,6))
+plt.pie(data, labels=labels, autopct='%1.1f%%')
+plt.title('Plane Conditions')
+
+# Save to buffer
+buffer = BytesIO()
+plt.savefig(buffer, format='png')
+plt.close()
+
+# Return base64
+print(base64.b64encode(buffer.getvalue()).decode('utf-8'))
+
+# print(displayData)
+
 myDB.close()
     
 
