@@ -92,10 +92,10 @@ if ($contentType === "application/json") {
 
     }else if (isset($data['action']) && $data['action'] === 'createEmployee'){
         
-        $role = $data['role'];
-        $firstname =   $data['firstname'];
-        $lastname =  $data['lastname'];
-        $password =  $data['password'];
+        $role = htmlspecialchars($data['role']);
+        $firstname =   htmlspecialchars($data['firstname']);
+        $lastname =  htmlspecialchars($data['lastname']);
+        $password =  htmlspecialchars($data['password']);
         $status = "available";
        
 
@@ -136,7 +136,7 @@ if ($contentType === "application/json") {
          '". $data['tire6'] ."',
          '". $data['engine'] ."', 
          'On Hold',
-         '". $data['comments'] ."',         
+         '". htmlspecialchars($data['comments'] )."',         
          '". getCurrentUser() ."',
          '". $data['neededWorkers'] ."');");
 
@@ -229,7 +229,7 @@ if ($contentType === "application/json") {
     }
     else if (isset($data['action']) && $data['action'] === 'liveSearchPlane'){
 
-        $name = $data['name']; 
+        $name = htmlspecialchars($data['name']); 
 
         $query = mysqli_query($conn, "SELECT * FROM plane WHERE NameID LIKE '$name%'"); 
         $data = '';
@@ -255,7 +255,7 @@ if ($contentType === "application/json") {
 
     }else if (isset($data['action']) && $data['action'] === 'liveSearchAdminEmployee'){
 
-        $id = $data['id']; 
+        $id = htmlspecialchars($data['id']); 
 
         $query = mysqli_query($conn, "SELECT * FROM users WHERE (firstname LIKE '$id%' OR lastname LIKE '$id%') AND role != 'admin';"); 
         $data = '';
@@ -284,7 +284,7 @@ if ($contentType === "application/json") {
 
     }if (isset($data['action']) && $data['action'] === 'liveSearchManagerStaff'){
 
-        $id = $data['id']; 
+        $id = htmlspecialchars($data['id']); 
 
         $query = mysqli_query($conn, "SELECT * FROM users WHERE (firstname LIKE '$id%' OR lastname LIKE '$id%') AND role = 'staff';"); 
         $data = '';

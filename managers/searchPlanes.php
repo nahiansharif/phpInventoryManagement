@@ -37,9 +37,11 @@ include '../plane.php';
 
     
 
+<?php
+include '../logout.php';
+?>
 
-
-    <a href="../index.php" class="logout">Log Out</a>
+    
     
 </body>
 </html>

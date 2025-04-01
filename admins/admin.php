@@ -81,7 +81,7 @@ $employeeNums = mysqli_fetch_assoc($managersANDstaff);
         </div>
     </div>
 
-    <a href="../index.php" class="logout">Log Out</a>
+    <?php include '../logout.php'; ?>
     
 </body>
 </html>

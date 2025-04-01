@@ -108,7 +108,7 @@
     </div>
     
 
-    <a href="../index.php" class="logout">Log Out</a>
+    <?php include '../logout.php'; ?>
 
     <script>
     // Create variables and store the values from the form

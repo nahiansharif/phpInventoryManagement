@@ -67,7 +67,7 @@ include '../infoBar.php';
 
     </div>
 
-    <a href="../index.php" class="logout">Log Out</a>
+    <?php include '../logout.php'; ?>
     <script>
         
     document.querySelectorAll(".RejectOrderButton").forEach(button => {

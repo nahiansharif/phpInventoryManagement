@@ -91,7 +91,7 @@ $employeeNums = mysqli_fetch_assoc($managersANDstaff);
     </div>
     
 
-    <a href="../index.php" class="logout">Log Out</a>
+    <?php include '../logout.php'; ?>
 
 <script>
         const removeButton = document.querySelector('.employeeRemoveButton');

@@ -1,16 +1,22 @@
 <?php
 
 include_once("database.php"); 
+$errorMessage = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    session_start();
-    setCurrentUser($username);
+
+    // htmlspecialchars
+    $username = htmlspecialchars($_POST['username']);
+    $password = htmlspecialchars($_POST['password']);
+    
+
 
    
     while ($row = mysqli_fetch_assoc($employees)){   
         if(($row["userID"] === $username) && ($row["password"] === $password)){
+
+            session_start();
+            setCurrentUser($username);
             
 
             switch($row["role"]){
@@ -26,6 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                 }
             
 
+        }
+        else{
+            $errorMessage = "Username or password is incorrect";
         }
 
     }
@@ -50,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         <form method="post" action = " <?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
             <img class="mb-4" src="logo.png" alt="" width="250" height="50">
             <h1 class="h3 mb-3 fw-normal title">Please sign in</h1>
+            <h1><?php echo $errorMessage; ?> </h1>
 
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="username" name="username" placeholder="username">
@@ -61,11 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             </div>
 
             <button class="btn btn-primary w-100 py-2" type="submit" value="login">Sign in</button>
-            <a href="admins/admin.php">admin</a>
-            <a href="managers/manager.php">Manager</a>
-            <a href="staff/staff.php">staff</a>
-            <a href="dummy.php">dummy</a>
-            <a href="database.php">db</a>
+
             <p class="mt-5 mb-3 text-body-secondary title">&copy; 2025</p>
         </form>
     </main>
